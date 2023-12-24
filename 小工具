@@ -77,6 +77,7 @@
         <button id="clearLineButton" class="btn btn-primary">清除换行</button>
         <button id="clearSymbolButton" class="btn btn-primary">清除符号</button>
 	      <button id="commaToNewlineButton" class="btn btn-primary">逗号转换为换行</button>
+        <button id="extractSKUButton" class="btn btn-primary">提取SKU</button>
         <button id="clearButton" class="btn btn-danger">清空数据</button>
       </div>
     </div>
@@ -122,6 +123,26 @@
   clearSymbolButton.addEventListener('click', clearSymbols);
   copyButton.addEventListener('click', copyOutput);
   commaToNewlineButton.addEventListener('click', commaToNewline);
+
+  document.getElementById('extractSKUButton').addEventListener('click', extractSKU);
+
+  function extractSKU() {
+  let inputData = document.getElementById('dataInput').value;
+  let skuPattern = /\b[A-Z]{3}[A-Z0-9]{8,}\b/g; // Match potential SKUs
+  let matches = inputData.match(skuPattern);
+  if (matches) {
+    // Filter out any SKUs that start with 'USD'
+    let filteredMatches = matches.filter(sku => !sku.startsWith('USD'));
+    document.getElementById('processedOutput').value = filteredMatches.join(',');
+    document.getElementById('processedOutput').readOnly = false;
+    document.getElementById('copyButton').disabled = false;
+  } else {
+    document.getElementById('processedOutput').value = '没有找到符合条件的SKU';
+    document.getElementById('processedOutput').readOnly = true;
+    document.getElementById('copyButton').disabled = true;
+  }
+  }
+
 
 
  

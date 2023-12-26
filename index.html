@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>数据处理工具</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="shortcut icon" href="https://i2.100024.xyz/2023/12/18/2jl8m.webp" type="image/x-icon">
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        setupCharCountListener('processedOutput', 'processedOutputCharCount');
+        setupCharCountListener('dataInput', 'dataInputCharCount');
+        setupCharCountListener('columnDataOutput', 'columnDataOutputCharCount'); // 注意大小写
+        setupCharCountListener('columnDataInput', 'columnDataInputCharCount');
+        // ...为其他文本框设置监听器...
+      });
+  
+      function updateCharCount(textAreaId, charCountId) {
+        var charCount = document.getElementById(textAreaId).value.length;
+        document.getElementById(charCountId).textContent = charCount + " 字符";
+      }
+  
+      function triggerContentUpdateEvent(textAreaId) {
+        var event = new Event('contentupdate');
+        document.getElementById(textAreaId).dispatchEvent(event);
+      }
+  
+      function setupCharCountListener(textAreaId, charCountId) {
+        var textArea = document.getElementById(textAreaId);
+        textArea.addEventListener('input', function() {
+          updateCharCount(textAreaId, charCountId);
+        });
+        textArea.addEventListener('contentupdate', function() {
+          updateCharCount(textAreaId, charCountId);
+        });
+      }
+    </script>  
+<style>
+  #copySuccessMsg1, #copySuccessMsg2 {
+    display: none;
+    color: green;
+  }
+  .button-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* 按钮之间的间距 */
+    margin-bottom: 10px; /* 与下方元素的间距 */
+  }
+  .button-container button {
+    flex: 1 1 calc(33.333% - 10px); /* 每个按钮占据三分之一的空间，减去间距 */
+    margin-bottom: 5px; /* 按钮之间的竖直间距 */
+  }
+  textarea {
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="container mt-5">
+  <h1 class="text-center">数据处理工具</h1>
+  <div class="row">
+    <div class="col-md-6">
+      <!-- 粘贴您的数据区域 -->
+      <div class="mb-3">
+        <label for="dataInput" class="form-label">粘贴您的数据：</label>
+        <textarea class="form-control" id="dataInput" rows="6" placeholder="在此粘贴数据"></textarea>
+        <div id="dataInputCharCount" style="text-align: right;">0 字符</div>
+      </div>
+      <!-- 按钮区域 -->
+      <div class="button-container">
+        <button id="processButton" class="btn btn-primary">空格/制表符转逗号</button>
+        <button id="reverseButton" class="btn btn-primary">逗号转空格</button>
+        <button id="quoteButton" class="btn btn-primary">添加单引号</button>
+        <button id="uppercaseButton" class="btn btn-primary">全大写</button>
+        <button id="lowercaseButton" class="btn btn-primary">全小写</button>
+        <button id="capitalizeButton" class="btn btn-primary">首字母大写</button>
+        <button id="clearSpaceButton" class="btn btn-primary">清除空格</button>
+        <button id="clearLineButton" class="btn btn-primary">清除换行</button>
+        <button id="clearSymbolButton" class="btn btn-primary">清除符号</button>
+	      <button id="commaToNewlineButton" class="btn btn-primary">逗号转换为换行</button>
+        <button id="extractSKUButton" class="btn btn-primary">提取SKU</button>
+        <button id="clearButton" class="btn btn-danger">清空数据</button>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <!-- 处理后的数据显示区域 -->
+      <div class="mb-3">
+        <label for="processedOutput" class="form-label">处理后的数据：</label>
+        <textarea class="form-control" id="processedOutput" rows="6" ></textarea>
+        <div id="processedOutputCharCount" style="text-align: right;">0 字符</div>
+      </div>
+      <button id="copyButton" class="btn btn-success" disabled>复制结果</button>
+      <div id="copySuccessMsg1">复制成功!</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const processButton = document.getElementById('processButton');
+  const reverseButton = document.getElementById('reverseButton');
+  const quoteButton = document.getElementById('quoteButton');
+  const clearButton = document.getElementById('clearButton');
+  const uppercaseButton = document.getElementById('uppercaseButton');
+  const lowercaseButton = document.getElementById('lowercaseButton');
+  const capitalizeButton = document.getElementById('capitalizeButton');
+  const clearSpaceButton = document.getElementById('clearSpaceButton');
+  const clearLineButton = document.getElementById('clearLineButton');
+  const clearSymbolButton = document.getElementById('clearSymbolButton');
+  const copyButton = document.getElementById('copyButton');
+  const dataInput = document.getElementById('dataInput');
+  const processedOutput = document.getElementById('processedOutput');
+  const copySuccessMsg = document.getElementById('copySuccessMsg');
+  const commaToNewlineButton = document.getElementById('commaToNewlineButton');
+
+  processButton.addEventListener('click', () => processInput(/\s+/g, ','));
+  reverseButton.addEventListener('click', () => reverseInput(','));
+  quoteButton.addEventListener('click', addQuotes);
+  clearButton.addEventListener('click', clearData);
+  uppercaseButton.addEventListener('click', toUppercase);
+  lowercaseButton.addEventListener('click', toLowercase);
+  capitalizeButton.addEventListener('click', capitalize);
+  clearSpaceButton.addEventListener('click', clearSpaces);
+  clearLineButton.addEventListener('click', clearLines);
+  clearSymbolButton.addEventListener('click', clearSymbols);
+  copyButton.addEventListener('click', copyOutput);
+  commaToNewlineButton.addEventListener('click', commaToNewline);
+
+  document.getElementById('extractSKUButton').addEventListener('click', extractSKU);
+
+  function extractSKU() {
+  let inputData = document.getElementById('dataInput').value;
+  let skuPattern = /\b[A-Z]{3}[A-Z0-9]{8,}\b/g; // Match potential SKUs
+  let matches = inputData.match(skuPattern);
+  if (matches) {
+    // Filter out any SKUs that start with 'USD'
+    let filteredMatches = matches.filter(sku => !sku.startsWith('USD'));
+    document.getElementById('processedOutput').value = filteredMatches.join(',');
+    document.getElementById('processedOutput').readOnly = false;
+    document.getElementById('copyButton').disabled = false;
+  } else {
+    document.getElementById('processedOutput').value = '没有找到符合条件的SKU';
+    document.getElementById('processedOutput').readOnly = true;
+    document.getElementById('copyButton').disabled = true;
+  }
+  }
+
+
+
+ 
+  function commaToNewline() {
+    let inputData = dataInput.value.trim();
+    let outputData = inputData.replace(/,/g, '\n'); // 将逗号替换为换行符
+    processedOutput.value = outputData;
+    processedOutput.readOnly = false;
+    copyButton.disabled = false;
+    triggerContentUpdateEvent('dataInput');
+    triggerContentUpdateEvent('processedOutput');
+  }
+
+  function processInput() {
+  let inputData = dataInput.value.trim();
+  try {
+    // Replace spaces and newline characters with commas
+    let processedData = inputData.replace(/[\s\n]+/g, ',');
+    processedOutput.value = processedData;
+    processedOutput.readOnly = false;
+    copyButton.disabled = false;
+  } catch (e) {
+    console.error("Error processing input: ", e);
+    // Handle the error (e.g., display a message to the user)
+  }
+}
+
+
+  function reverseInput(oldDelimiter) {
+  let inputData = dataInput.value.trim();
+  // Check for English comma or Chinese comma and replace with space
+  if (inputData.includes(oldDelimiter) || inputData.includes('，')) {
+    processedOutput.value = inputData.replace(/,|，/g, ' ');
+    processedOutput.readOnly = false;
+    copyButton.disabled = false;
+  }
+  triggerContentUpdateEvent('dataInput');
+  triggerContentUpdateEvent('processedOutput');
+  }
+
+  function addQuotes() {
+    let inputData = dataInput.value.trim();
+    if (inputData.includes(',')) {
+      let quotedData = inputData.split(',').map(item => "'" + item.trim() + "'");
+      processedOutput.value = quotedData.join(', ');
+      processedOutput.readOnly = false;
+      copyButton.disabled = false;
+    }
+    triggerContentUpdateEvent('dataInput');
+    triggerContentUpdateEvent('processedOutput');
+  }
+
+  function clearData() {
+    dataInput.value = '';
+    processedOutput.value = '';
+    processedOutput.readOnly = true;
+    copyButton.disabled = true;
+    triggerContentUpdateEvent('dataInput');
+    triggerContentUpdateEvent('processedOutput');
+  }
+
+  function toUppercase() {
+  let inputData = dataInput.value;
+  processedOutput.value = inputData.toUpperCase();
+  processedOutput.readOnly = false;
+  
+  // 添加判断语句
+  if (processedOutput.value === '') {
+    copyButton.disabled = true;
+  } else {
+    copyButton.disabled = false;
+  }
+  triggerContentUpdateEvent('dataInput');
+  triggerContentUpdateEvent('processedOutput');
+  }
+
+  function toLowercase() {
+  let inputData = dataInput.value;
+  processedOutput.value = inputData.toLowerCase();
+  processedOutput.readOnly = false;
+  copyButton.disabled = processedOutput.value === '';
+  triggerContentUpdateEvent('processedOutput');
+  triggerContentUpdateEvent('dataInput');
+  }
+
+  function capitalize() {
+  let inputData = dataInput.value;
+  processedOutput.value = inputData.replace(/(^|\s)\S/g, l => l.toUpperCase());
+  processedOutput.readOnly = false;
+  copyButton.disabled = processedOutput.value === '';
+  triggerContentUpdateEvent('processedOutput');
+  triggerContentUpdateEvent('dataInput');
+  }
+
+  function clearSpaces() {
+  let inputData = dataInput.value;
+  processedOutput.value = inputData.replace(/\s/g, '');
+  processedOutput.readOnly = false;
+  copyButton.disabled = processedOutput.value === '';
+  triggerContentUpdateEvent('processedOutput');
+  triggerContentUpdateEvent('dataInput');
+  }
+
+  function clearLines() {
+  let inputData = dataInput.value;
+  processedOutput.value = inputData.replace(/\n/g, ' ');
+  processedOutput.readOnly = false;
+  copyButton.disabled = processedOutput.value === '';
+  triggerContentUpdateEvent('processedOutput');
+  triggerContentUpdateEvent('dataInput');
+ }
+
+  function clearSymbols() {
+   let inputData = dataInput.value;
+   // 使用一个详尽的正则表达式来匹配并移除各种中英文特殊符号
+   processedOutput.value = inputData.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/·～！@#￥%……&*（）—+|{}【】‘；：”“'。，、《》]/gi, '');
+   processedOutput.readOnly = false;
+   copyButton.disabled = processedOutput.value === '';
+   triggerContentUpdateEvent('dataInput');
+   triggerContentUpdateEvent('processedOutput');
+  }
+
+
+
+  function copyOutput() {
+    processedOutput.select();
+    document.execCommand('copy');
+    let copySuccessMsg1 = document.getElementById('copySuccessMsg1'); // 使用copySuccessMsg1
+    copySuccessMsg1.style.display = 'block';
+    setTimeout(() => { copySuccessMsg1.style.display = 'none'; }, 2000);
+    triggerContentUpdateEvent('dataInput');
+    triggerContentUpdateEvent('processedOutput');
+  }
+
+  processedOutput.addEventListener('input', function() {
+  copyButton.disabled = processedOutput.value === '';
+  });
+
+</script>
+
+<!-- ...您现有的代码... -->
+
+<!-- 提取列数据的新功能 -->
+<div class="container mt-5">
+  <h2 class="text-center">提取列数据</h2>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="mb-3">
+        <label for="columnDataInput" class="form-label">输入多列数据(以空格分隔)：</label>
+        <textarea class="form-control" id="columnDataInput" rows="6" placeholder="在此粘贴多列数据"></textarea>
+        <div id="columnDataInputCharCount" style="text-align: right;">0 字符</div>
+      </div>
+      <div class="input-group mb-3">
+        <span class="input-group-text">提取第</span>
+        <input type="number" class="form-control" id="columnNumberInput" placeholder="列号">
+        <span class="input-group-text">列的数据</span>
+        <button id="extractColumnButton" class="btn btn-primary">提取列数据</button>
+      </div>
+      <button id="clearColumnDataButton" class="btn btn-danger">清除数据</button>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <label for="columnDataOutput" class="form-label">提取的列数据：</label>
+        <textarea class="form-control" id="columnDataOutput" rows="6" ></textarea>
+        <div id="columnDataOutputCharCount" style="text-align: right;">0 字符</div>
+      </div>
+      <button id="copyColumnDataButton" class="btn btn-success">复制结果</button>
+      <div id="copySuccessMsg2">复制成功!</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ...您现有的JavaScript逻辑代码...
+
+
+  document.getElementById('extractColumnButton').addEventListener('click', extractColumnData);
+  document.getElementById('clearColumnDataButton').addEventListener('click', clearColumnData);
+  document.getElementById('copyColumnDataButton').addEventListener('click', copyColumnData);
+
+
+  function extractColumnData() {
+    const columnDataInput = document.getElementById('columnDataInput').value;
+    const columnNumber = parseInt(document.getElementById('columnNumberInput').value, 10);
+    const rows = columnDataInput.split('\n');
+    let extractedData = rows.map(row => {
+      const columns = row.split(/\s+/); // Assuming whitespace as column separator
+      return columns[columnNumber - 1] || ''; // Adjust for zero-indexed arrays
+    }).join('\n');
+    document.getElementById('columnDataOutput').value = extractedData;
+    // 启用或禁用复制按钮
+    document.getElementById('copyColumnDataButton').disabled = !extractedData.trim();
+    toggleCopyButton();
+    triggerContentUpdateEvent('columnDataOutput');
+    triggerContentUpdateEvent('columnDataInput');
+  }
+
+  function clearColumnData() {
+    document.getElementById('columnDataInput').value = '';
+    document.getElementById('columnDataOutput').value = '';
+    // 禁用复制按钮
+    document.getElementById('copyColumnDataButton').disabled = true;
+    triggerContentUpdateEvent('columnDataOutput');
+    triggerContentUpdateEvent('columnDataInput');
+  }
+
+  function copyColumnData() {
+    const columnDataOutput = document.getElementById('columnDataOutput');
+    columnDataOutput.select();
+    document.execCommand('copy');
+    let copySuccessMsg2 = document.getElementById('copySuccessMsg2'); // 使用copySuccessMsg2
+    copySuccessMsg2.style.display = 'block';
+    setTimeout(() => { copySuccessMsg2.style.display = 'none'; }, 2000);
+  }
+  
+  function toggleCopyButton() {
+    const extractedData = document.getElementById('columnDataOutput').value;
+    document.getElementById('copyColumnDataButton').disabled = !extractedData.trim();
+  }
+  
+  toggleCopyButton();
+
+  // You may want to include a function similar to copyOutput for the copy success message...
+</script>

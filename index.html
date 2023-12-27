@@ -143,9 +143,6 @@
   }
   }
 
-
-
- 
   function commaToNewline() {
     let inputData = dataInput.value.trim();
     let outputData = inputData.replace(/,/g, '\n'); // 将逗号替换为换行符
@@ -156,15 +153,18 @@
     triggerContentUpdateEvent('processedOutput');
   }
 
-  function processInput(regex, newDelimiter) {
-    let inputData = dataInput.value.trim();
-    if ((/\s/).test(inputData) && !inputData.includes(',')) {
-      processedOutput.value = inputData.replace(regex, newDelimiter);
-      processedOutput.readOnly = false;
-      copyButton.disabled = false;
-    }
-    triggerContentUpdateEvent('dataInput');
-    triggerContentUpdateEvent('processedOutput');
+  function processInput() {
+  let inputData = dataInput.value.trim();
+  try {
+    // Replace spaces and newline characters with commas
+    let processedData = inputData.replace(/[\s\n]+/g, ',');
+    processedOutput.value = processedData;
+    processedOutput.readOnly = false;
+    copyButton.disabled = false;
+  } catch (e) {
+    console.error("Error processing input: ", e);
+    // Handle the error (e.g., display a message to the user)
+  }
   }
 
   function reverseInput(oldDelimiter) {

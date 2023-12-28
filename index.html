@@ -165,6 +165,8 @@
     console.error("Error processing input: ", e);
     // Handle the error (e.g., display a message to the user)
   }
+  triggerContentUpdateEvent('dataInput');
+  triggerContentUpdateEvent('processedOutput');
   }
 
   function reverseInput(oldDelimiter) {

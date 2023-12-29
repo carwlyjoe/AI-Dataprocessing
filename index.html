@@ -52,6 +52,8 @@
   textarea {
     margin-bottom: 10px;
   }
+
+
 </style>
 </head>
 <body>
@@ -78,7 +80,7 @@
         <button id="clearSymbolButton" class="btn btn-primary">清除符号</button>
 	      <button id="commaToNewlineButton" class="btn btn-primary">逗号转换为换行</button>
         <button id="extractSKUButton" class="btn btn-primary">提取SKU</button>
-        <button id="clearButton" class="btn btn-danger">清空数据</button>
+        <button id="deduplicateWordsButton" class="btn btn-primary">英文去重</button>
       </div>
     </div>
     <div class="col-md-6">
@@ -89,6 +91,7 @@
         <div id="processedOutputCharCount" style="text-align: right;">0 字符</div>
       </div>
       <button id="copyButton" class="btn btn-success" disabled>复制结果</button>
+      <button id="clearButton" class="btn btn-danger">清空数据</button>
       <div id="copySuccessMsg1">复制成功!</div>
     </div>
   </div>
@@ -125,6 +128,16 @@
   commaToNewlineButton.addEventListener('click', commaToNewline);
 
   document.getElementById('extractSKUButton').addEventListener('click', extractSKU);
+  // 英文去重按钮事件处理程序
+document.getElementById('deduplicateWordsButton').addEventListener('click', function() {
+  var inputData = document.getElementById('dataInput').value; // 假设您已经有了一个ID为dataInput的文本域来接收用户输入的数据
+  var words = inputData.match(/\b\w+\b/g); // 使用正则表达式匹配所有英文单词
+  var uniqueWords = Array.from(new Set(words)); // 创建一个Set来去除重复单词，然后转换回数组
+  document.getElementById('processedOutput').value = uniqueWords.join(' '); // 假设您已经有了一个ID为processedOutput的文本域来显示处理后的数据
+  triggerContentUpdateEvent('dataInput');
+  triggerContentUpdateEvent('processedOutput');
+});
+
 
   function extractSKU() {
   let inputData = document.getElementById('dataInput').value;
@@ -285,33 +298,65 @@
 
 <!-- 提取列数据的新功能 -->
 <div class="container mt-5">
-  <h2 class="text-center">提取列数据</h2>
   <div class="row">
     <div class="col-md-6">
+      <!-- 输入区域 -->
       <div class="mb-3">
-        <label for="columnDataInput" class="form-label">输入多列数据(以空格分隔)：</label>
-        <textarea class="form-control" id="columnDataInput" rows="6" placeholder="在此粘贴多列数据"></textarea>
+        <label for="columnDataInput" class="form-label">输入数据：</label>
+        <textarea class="form-control" id="columnDataInput" rows="6" placeholder="在此粘贴数据"></textarea>
         <div id="columnDataInputCharCount" style="text-align: right;">0 字符</div>
       </div>
+
+      <!-- 提取列数据按钮 -->
       <div class="input-group mb-3">
         <span class="input-group-text">提取第</span>
         <input type="number" class="form-control" id="columnNumberInput" placeholder="列号">
         <span class="input-group-text">列的数据</span>
         <button id="extractColumnButton" class="btn btn-primary">提取列数据</button>
       </div>
-      <button id="clearColumnDataButton" class="btn btn-danger">清除数据</button>
+
+      <!-- 替换功能 -->
+      <div class="input-group mb-3">
+        <input type="text" id="findTextInput" class="form-control" placeholder="查找字符">
+        <input type="text" id="replaceTextInput" class="form-control" placeholder="替换为">
+        <button id="textReplaceButton" class="btn btn-primary">替换</button>
+      </div>
+
+      <!-- 添加序号功能 -->
+      <div class="input-group mb-3">
+        <span class="input-group-text">序号格式</span>
+        <select class="form-select" id="serialFormatSelect">
+          <option value="n">n</option>
+          <option value="n.">n.</option>
+          <option value="n、">n、</option>
+          <option value="n,">n,</option>
+          <option value="(n)">(n)</option>
+          <option value="[n]">[n]</option>
+        </select>
+        <span class="input-group-text">开始数字</span>
+        <input type="number" class="form-control" id="startNumberInput" placeholder="开始数字" value="1" min="1">
+        <span class="input-group-text">数字间隔</span>
+        <input type="number" class="form-control" id="numberIntervalInput" placeholder="数字间隔" value="1" min="1">
+        <button id="addSerialNumbersButton" class="btn btn-primary">添加序号</button>
+      </div>
     </div>
+
     <div class="col-md-6">
+      <!-- 结果区域 -->
       <div class="mb-3">
-        <label for="columnDataOutput" class="form-label">提取的列数据：</label>
-        <textarea class="form-control" id="columnDataOutput" rows="6" ></textarea>
+        <label for="columnDataOutput" class="form-label">输出数据：</label>
+        <textarea class="form-control" id="columnDataOutput" rows="6"></textarea>
         <div id="columnDataOutputCharCount" style="text-align: right;">0 字符</div>
       </div>
-      <button id="copyColumnDataButton" class="btn btn-success">复制结果</button>
-      <div id="copySuccessMsg2">复制成功!</div>
+      <div class="mb-3">
+        <button id="copyColumnDataButton" class="btn btn-success">复制结果</button>
+        <button id="clearColumnDataButton" class="btn btn-danger">清除数据</button>
+        <div id="copySuccessMsg2">复制成功!</div>
+      </div>
     </div>
   </div>
 </div>
+
 
 <script>
   // ...您现有的JavaScript逻辑代码...
@@ -320,6 +365,29 @@
   document.getElementById('extractColumnButton').addEventListener('click', extractColumnData);
   document.getElementById('clearColumnDataButton').addEventListener('click', clearColumnData);
   document.getElementById('copyColumnDataButton').addEventListener('click', copyColumnData);
+
+  document.getElementById('addSerialNumbersButton').addEventListener('click', function() {
+  var format = document.getElementById('serialFormatSelect').value;
+  var startNumber = parseInt(document.getElementById('startNumberInput').value, 10);
+  var interval = parseInt(document.getElementById('numberIntervalInput').value, 10);
+  var inputData = document.getElementById('columnDataInput').value; // Corrected ID
+  var outputData = '';
+  var currentNumber = startNumber;
+
+  inputData.split('\n').forEach(function(line, index) {
+    if (line.trim() !== '') { // Skip empty lines
+      // Replace 'n' in the selected format with the current number
+      outputData += format.replace(/n/g, currentNumber) + line + '\n';
+      currentNumber += interval; // Increment by the interval
+    }
+  });
+
+  document.getElementById('columnDataOutput').value = outputData; 
+  triggerContentUpdateEvent('columnDataOutput');
+  triggerContentUpdateEvent('columnDataInput');// Corrected ID
+});
+
+
 
 
   function extractColumnData() {
@@ -360,6 +428,23 @@
     const extractedData = document.getElementById('columnDataOutput').value;
     document.getElementById('copyColumnDataButton').disabled = !extractedData.trim();
   }
+
+  // 文本替换按钮事件处理程序
+document.getElementById('textReplaceButton').addEventListener('click', function() {
+  var findText = document.getElementById('findTextInput').value;
+  var replaceText = document.getElementById('replaceTextInput').value;
+  var inputData = document.getElementById('columnDataInput').value; // 假设您已经有了一个ID为columnDataInput的文本域来接收用户输入的数据
+  var replacedData = inputData.replace(new RegExp(escapeRegExp(findText), 'g'), replaceText);
+  document.getElementById('columnDataOutput').value = replacedData; // 假设您已经有了一个ID为columnDataOutput的文本域来显示替换后的数据
+  triggerContentUpdateEvent('columnDataOutput');
+  triggerContentUpdateEvent('columnDataInput');
+});
+
+// 功能：转义正则表达式中的特殊字符
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
   
   toggleCopyButton();
 

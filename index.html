@@ -12,6 +12,7 @@
         setupCharCountListener('columnDataOutput', 'columnDataOutputCharCount'); // 注意大小写
         setupCharCountListener('columnDataInput', 'columnDataInputCharCount');
         // ...为其他文本框设置监听器...
+
       });
   
       function updateCharCount(textAreaId, charCountId) {
@@ -388,6 +389,50 @@ document.getElementById('deduplicateWordsButton').addEventListener('click', func
 });
 
 
+document.addEventListener('DOMContentLoaded', function() {
+  setupCharCountListener('processedOutput', 'processedOutputCharCount');
+  setupCharCountListener('dataInput', 'dataInputCharCount');
+  setupCharCountListener('columnDataOutput', 'columnDataOutputCharCount'); // 注意大小写
+  setupCharCountListener('columnDataInput', 'columnDataInputCharCount');
+  // ...为其他文本框设置监听器...
+  
+  // Set the initial state of the copy button on page load
+  updateCopyButtonState();
+});
+
+function updateCharCount(textAreaId, charCountId) {
+  var charCount = document.getElementById(textAreaId).value.length;
+  document.getElementById(charCountId).textContent = charCount + " 字符";
+  
+  // If the text area being updated is 'columnDataOutput', also update the copy button state
+  if (textAreaId === 'columnDataOutput') {
+    updateCopyButtonState();
+  }
+}
+
+function triggerContentUpdateEvent(textAreaId) {
+  var event = new Event('contentupdate');
+  document.getElementById(textAreaId).dispatchEvent(event);
+} 
+
+function setupCharCountListener(textAreaId, charCountId) {
+  var textArea = document.getElementById(textAreaId);
+  textArea.addEventListener('input', function() {
+    updateCharCount(textAreaId, charCountId);
+  });
+  textArea.addEventListener('contentupdate', function() {
+    updateCharCount(textAreaId, charCountId);
+  });
+}
+
+// New function to update the state of the copy button
+function updateCopyButtonState() {
+  const outputArea = document.getElementById('columnDataOutput');
+  const copyButton = document.getElementById('copyColumnDataButton');
+  copyButton.disabled = !outputArea.value.trim();
+}
+
+updateCopyButtonState();
 
 
   function extractColumnData() {
@@ -401,7 +446,6 @@ document.getElementById('deduplicateWordsButton').addEventListener('click', func
     document.getElementById('columnDataOutput').value = extractedData;
     // 启用或禁用复制按钮
     document.getElementById('copyColumnDataButton').disabled = !extractedData.trim();
-    toggleCopyButton();
     triggerContentUpdateEvent('columnDataOutput');
     triggerContentUpdateEvent('columnDataInput');
   }
@@ -424,10 +468,6 @@ document.getElementById('deduplicateWordsButton').addEventListener('click', func
     setTimeout(() => { copySuccessMsg2.style.display = 'none'; }, 2000);
   }
   
-  function toggleCopyButton() {
-    const extractedData = document.getElementById('columnDataOutput').value;
-    document.getElementById('copyColumnDataButton').disabled = !extractedData.trim();
-  }
 
   // 文本替换按钮事件处理程序
 document.getElementById('textReplaceButton').addEventListener('click', function() {
@@ -445,8 +485,8 @@ function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-  
-  toggleCopyButton();
+
+
 
   // You may want to include a function similar to copyOutput for the copy success message...
 </script>

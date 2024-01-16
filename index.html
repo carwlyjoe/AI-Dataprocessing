@@ -144,11 +144,12 @@ document.getElementById('convertToTabButton').addEventListener('click', convertN
 
 function convertNewlinesToTabs() {
   let inputData = dataInput.value;
-  let outputData = inputData.replace(/\n\n/g, '\t');
+  let outputData = inputData.replace(/\n/g, '\t');  // 替换所有换行符为制表符
   processedOutput.value = outputData;
   processedOutput.readOnly = false;
   copyButton.disabled = false;
 }
+
 
 
   function extractSKU() {

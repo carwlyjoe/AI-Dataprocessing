@@ -157,18 +157,26 @@ function convertNewlinesToTabs() {
   processedOutput.readOnly = false;
   copyButton.disabled = false;
 }
-
 function cmToFeetInch() {
     let inputData = parseFloat(dataInput.value.trim()); // 假设输入的是纯数字
     if (!isNaN(inputData)) {
-        const totalInches = inputData / 2.54;
-        const feet = Math.floor(totalInches / 12);
-        const inches = Math.round(totalInches % 12);
-        processedOutput.value = `${feet.toFixed(2)}英尺 ${inches.toFixed(2)}英寸`;
+        // 直接将厘米转换为英尺，保留两位小数
+        const feet = (inputData * 0.032808).toFixed(2);
+        // 直接将厘米转换为英寸，保留两位小数
+        const inches = (inputData * 0.3937).toFixed(2);
+
+        processedOutput.value = `${feet}英尺 / ${inches}英寸`;
         processedOutput.readOnly = false;
         copyButton.disabled = false;
+    } else {
+        processedOutput.value = "请输入有效的数字";
+        processedOutput.readOnly = false;
+        copyButton.disabled = true;
     }
 }
+
+
+
 
 function gToPounds() {
     let inputData = parseFloat(dataInput.value.trim()); // 假设输入的是纯数字
@@ -177,6 +185,11 @@ function gToPounds() {
         processedOutput.value = `${pounds.toFixed(2)}英镑`;
         processedOutput.readOnly = false;
         copyButton.disabled = false;
+      } else {
+        // 输入不是一个有效数字时的处理
+        processedOutput.value = "请输入有效的数字";
+        processedOutput.readOnly = false;
+        copyButton.disabled = true;
     }
 }
 

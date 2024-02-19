@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -79,10 +81,11 @@
         <button id="clearSpaceButton" class="btn btn-primary">清除空格</button>
         <button id="clearLineButton" class="btn btn-primary">清除换行</button>
         <button id="clearSymbolButton" class="btn btn-primary">清除符号</button>
-	<button id="commaToNewlineButton" class="btn btn-primary">逗号转换为换行</button>
+	      <button id="commaToNewlineButton" class="btn btn-primary">逗号转换为换行</button>
         <button id="extractSKUButton" class="btn btn-primary">提取SKU</button>
         <button id="deduplicateWordsButton" class="btn btn-primary">英文去重</button>
-	<button id="convertToTabButton" class="btn btn-primary">换行符转制表符</button>
+	      <button id="convertToTabButton" class="btn btn-primary">换行符转制表符</button>
+        <button id="newlineToCommaButton" class="btn btn-primary">换行转逗号</button>
       </div>
     </div>
     <div class="col-md-6">
@@ -141,6 +144,7 @@ document.getElementById('deduplicateWordsButton').addEventListener('click', func
 });
 
 document.getElementById('convertToTabButton').addEventListener('click', convertNewlinesToTabs);
+document.getElementById('newlineToCommaButton').addEventListener('click',newlineToComma)
 
 function convertNewlinesToTabs() {
   let inputData = dataInput.value;
@@ -151,7 +155,14 @@ function convertNewlinesToTabs() {
 }
 
 
+function newlineToComma() {
+  let inputData = dataInput.value.trim();
+  let outputData = inputData.replace(/\n/g, ',')
+  processedOutput.value = outputData;
+  processedOutput.value.readOnly = false
+  copyButton.disabled = false;
 
+}
 
 
   function extractSKU() {

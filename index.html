@@ -421,6 +421,7 @@ function newlineToComma() {
 
 
   document.getElementById('copyColumnDataButton').addEventListener('click', copyColumnData);
+  document.getElementById('clearColumnDataButton').addEventListener('click', clearColumnData);
 
   document.getElementById('addSerialNumbersButton').addEventListener('click', function() {
   var format = document.getElementById('serialFormatSelect').value;
@@ -463,6 +464,16 @@ function updateCharCount(textAreaId, charCountId) {
   if (textAreaId === 'columnDataOutput') {
     updateCopyButtonState();
   }
+}
+
+
+function clearColumnData() {
+    document.getElementById('columnDataInput').value = '';
+    document.getElementById('columnDataOutput').value = '';
+    // 禁用复制按钮
+    document.getElementById('copyColumnDataButton').disabled = true;
+    triggerContentUpdateEvent('columnDataOutput');
+    triggerContentUpdateEvent('columnDataInput');
 }
 
 function triggerContentUpdateEvent(textAreaId) {

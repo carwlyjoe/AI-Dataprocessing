@@ -76,6 +76,33 @@
   }
 
 
+  .github-issues-link {
+    position: fixed;
+    top: 50%; /* 或者您想要的任何位置 */
+    right: 20px; /* 根据页面布局调整 */
+    transform: translateY(-50%);
+    background: #fff; /* 为了更好的可见性 */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    z-index: 1000; /* 确保它在页面其他内容上方 */
+  }
+
+  .github-issues-link a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .github-issues-link img {
+    width: 24px; /* 图标大小 */
+    height: auto;
+  }
+
 </style>
 </head>
 <body>
@@ -578,3 +605,10 @@ function escapeRegExp(string) {
 
   // You may want to include a function similar to copyOutput for the copy success message...
 </script>
+<body>
+<div class="github-issues-link">
+  <a href="https://github.com/carwlyjoe/carwlyjoe/issues" target="_blank" title="提建议">
+    <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub Issues" />
+    提出功能优化建议
+  </a>
+</div>

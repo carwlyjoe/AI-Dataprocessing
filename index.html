@@ -56,6 +56,25 @@
     margin-bottom: 10px;
   }
 
+  .feature-description {
+    border: 1px solid #007bff; /* 蓝色边框 */
+    border-radius: 5px; /* 边框圆角 */
+    padding: 10px; /* 内边距 */
+    margin-top: 20px; /* 与上方元素的间距 */
+    background-color: #f8f9fa; /* 背景色 */
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2); /* 阴影效果 */
+  }
+
+  .feature-description h2 {
+    color: #007bff; /* 标题颜色 */
+    font-size: 18px; /* 调整标题的字体大小 */
+  }
+
+  .feature-description p {
+    color: #212529; /* 段落文字颜色 */
+    line-height: 1.5; /* 行高 */
+  }
+
 
 </style>
 </head>
@@ -86,8 +105,8 @@
         <button id="deduplicateWordsButton" class="btn btn-primary">英文去重</button>
 	      <button id="convertToTabButton" class="btn btn-primary">换行符转制表符</button>
         <button id="newlineToCommaButton" class="btn btn-primary">换行转逗号</button>
-        <button id="cmToFeetInchButton" class="btn btn-primary">厘米转英尺/英寸</button>
-        <button id="gToPoundsButton" class="btn btn-primary">克转英镑</button>
+        <button id="cmToInchButton" class="btn btn-primary">厘米/英寸转换</button>
+        <button id="gToPoundsButton" class="btn btn-primary">克/英镑转换</button>
       </div>
     </div>
     <div class="col-md-6">
@@ -100,8 +119,16 @@
       <button id="copyButton" class="btn btn-success" disabled>复制结果</button>
       <button id="clearButton" class="btn btn-danger">清空数据</button>
       <div id="copySuccessMsg1">复制成功!</div>
+      <!-- 功能说明区域 -->
+      <div class="feature-description">
+        <h2>功能说明：</h2>
+        <p>“厘米/英寸转换”和“克/英镑转换”功能二次点击可进行反向转换</p>
+      </div>
     </div>
-  </div>
+
+    </div>
+
+
 </div>
 
 <script>
@@ -145,8 +172,8 @@ document.getElementById('deduplicateWordsButton').addEventListener('click', func
   triggerContentUpdateEvent('processedOutput');
 });
 
-document.getElementById('cmToFeetInchButton').addEventListener('click', cmToFeetInch);
-document.getElementById('gToPoundsButton').addEventListener('click', gToPounds);
+document.getElementById('cmToInchButton').addEventListener('click', toggleConversion);
+document.getElementById('gToPoundsButton').addEventListener('click', toggleGramPoundConversion);
 document.getElementById('convertToTabButton').addEventListener('click', convertNewlinesToTabs);
 document.getElementById('newlineToCommaButton').addEventListener('click',newlineToComma)
 
@@ -157,17 +184,25 @@ function convertNewlinesToTabs() {
   processedOutput.readOnly = false;
   copyButton.disabled = false;
 }
-function cmToFeetInch() {
-    let inputData = parseFloat(dataInput.value.trim()); // 假设输入的是纯数字
-    if (!isNaN(inputData)) {
-        // 直接将厘米转换为英尺，保留两位小数
-        const feet = (inputData * 0.032808).toFixed(2);
-        // 直接将厘米转换为英寸，保留两位小数
-        const inches = (inputData * 0.3937).toFixed(2);
+// 标志变量，用于追踪转换模式，初始设置为true，表示第一次点击时进行厘米到英寸的转换
+let isCmToInches = true;
 
-        processedOutput.value = `${feet}英尺 / ${inches}英寸`;
+function toggleConversion() {
+    let inputData = parseFloat(dataInput.value.trim()); // 获取用户输入并转换为浮点数
+    if (!isNaN(inputData)) {
+        let result;
+        if (isCmToInches) {
+            // 执行厘米到英寸的转换
+            result = (inputData * 0.3937).toFixed(2) + "英寸";
+        } else {
+            // 执行英寸到厘米的转换
+            result = (inputData / 0.3937).toFixed(2) + "厘米";
+        }
+        processedOutput.value = result; // 显示转换结果
         processedOutput.readOnly = false;
         copyButton.disabled = false;
+
+        isCmToInches = !isCmToInches; // 切换转换模式
     } else {
         processedOutput.value = "请输入有效的数字";
         processedOutput.readOnly = false;
@@ -178,15 +213,26 @@ function cmToFeetInch() {
 
 
 
-function gToPounds() {
-    let inputData = parseFloat(dataInput.value.trim()); // 假设输入的是纯数字
+// 标志变量，初始设置为true，表示从克到英镑的转换
+let isGramsToPounds = true;
+
+function toggleGramPoundConversion() {
+    let inputData = parseFloat(dataInput.value.trim()); // 获取用户输入并转换为浮点数
     if (!isNaN(inputData)) {
-        const pounds = inputData * 0.00220462;
-        processedOutput.value = `${pounds.toFixed(2)}英镑`;
+        let result;
+        if (isGramsToPounds) {
+            // 执行克到英镑的转换
+            result = (inputData * 0.00220462).toFixed(2) + "英镑";
+        } else {
+            // 执行英镑到克的转换
+            result = (inputData / 0.00220462).toFixed(2) + "克";
+        }
+        processedOutput.value = result; // 显示转换结果
         processedOutput.readOnly = false;
         copyButton.disabled = false;
-      } else {
-        // 输入不是一个有效数字时的处理
+
+        isGramsToPounds = !isGramsToPounds; // 切换转换模式
+    } else {
         processedOutput.value = "请输入有效的数字";
         processedOutput.readOnly = false;
         copyButton.disabled = true;

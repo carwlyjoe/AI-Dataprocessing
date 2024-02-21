@@ -604,6 +604,11 @@ function escapeRegExp(string) {
 
 
   // You may want to include a function similar to copyOutput for the copy success message...
+
+
+</script>
+
+
 </script>
 <body>
 <div class="github-issues-link">
@@ -612,3 +617,20 @@ function escapeRegExp(string) {
     提出功能优化建议
   </a>
 </div>
+
+<div id="live2d-widget"></div>
+<script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/live2d.min.js"></script>
+<script>
+  L2Dwidget.init({
+    model: {
+      jsonPath: 'https://cdn.jsdelivr.net/npm/live2d-widget-model-hijiki/assets/hijiki.model.json',
+      // 其他模型配置...
+    },
+    display: {
+      position: "left", // 显示位置：左或右
+      width: 150,  // 宽度
+      height: 300, // 高度
+      // 其他显示配置...
+    },
+    // 其他全局配置...
+  });

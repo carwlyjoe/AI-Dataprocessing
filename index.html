@@ -623,17 +623,22 @@ function escapeRegExp(string) {
 <div id="live2d-widget"></div>
 <script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/live2d.min.js"></script>
 <script>
-  L2Dwidget.init({
-    model: {
-      jsonPath: 'https://cdn.jsdelivr.net/npm/live2d-widget-model-hijiki/assets/hijiki.model.json',
-      // 其他模型配置...
-    },
-    display: {
-      position: "left", // 显示位置：左或右
-      width: 150,  // 宽度
-      height: 300, // 高度
-      // 其他显示配置...
-    },
-    // 其他全局配置...
-  });
+  // 使用 fetch API 从本地服务器加载模型的 JSON 文件
+  fetch('hijiki.model.json')
+    .then(response => response.json())
+    .then(modelData => {
+      L2Dwidget.init({
+        model: modelData, // 使用加载的模型数据初始化
+        display: {
+          position: "left", // 显示位置：左或右
+          width: 150,  // 宽度
+          height: 300, // 高度
+          // 其他显示配置...
+        },
+        // 其他全局配置...
+      });
+    })
+    .catch(error => console.error('Could not load the model JSON:', error));
+</script>
+
 

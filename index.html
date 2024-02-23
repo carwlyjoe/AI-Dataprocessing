@@ -1,6 +1,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -621,18 +622,35 @@ function escapeRegExp(string) {
 
 
 
-<canvas id="live2d" width="200" height="300" style="position: fixed; right: 0; bottom: 0; z-index: 99999; pointer-events: none;"></canvas>
+<div id="live2d-container" style="position: fixed; right: 0; bottom: 0; z-index: 99999;">
+  <canvas id="live2d" width="200" height="300"></canvas>
+  <button id="close-live2d" style="display: none;">关闭桌宠</button>
+</div>
 <script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/live2d.min.js"></script>
 <script>
+document.getElementById('live2d-container').addEventListener('mouseover', function() {
+  document.getElementById('close-live2d').style.display = 'block';
+});
+
+document.getElementById('live2d-container').addEventListener('mouseout', function() {
+  document.getElementById('close-live2d').style.display = 'none';
+});
+
+
+  document.getElementById('close-live2d').addEventListener('click', function() {
+    document.getElementById('live2d-container').style.display = 'none';
+  });
+
   function loadLive2D() {
     if (typeof window.loadlive2d !== 'undefined') {
       window.loadlive2d('live2d', 'https://cdn.jsdelivr.net/npm/live2d-widget-model-hijiki/assets/hijiki.model.json');
     }
   }
-
-  // Load the Live2D model after the page has fully loaded
   window.addEventListener('load', loadLive2D);
 </script>
 
 
+
+
 </script>
+

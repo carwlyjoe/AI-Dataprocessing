@@ -1,7 +1,7 @@
 
 
 
-const apiKey = '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';
+const apiKey = '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';
 let messagesHistory = [];
 
 async function sendMessage(text) {
@@ -124,6 +124,8 @@ document.getElementById('user-input').addEventListener('keydown', function(event
 
 const chatContainer = document.querySelector('.chat-container');
 
+    let isDragging = false;
+    let dragOffsetX, dragOffsetY;
     
     chatContainer.addEventListener('mousedown', (e) => {
       isDragging = true;
@@ -145,4 +147,28 @@ const chatContainer = document.querySelector('.chat-container');
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  // 当用户按下鼠标时开始拖动
+  chatContainer.addEventListener('mousedown', (e) => {
+    drag = true;
+    offsetX = e.clientX - chatContainer.offsetLeft;
+    offsetY = e.clientY - chatContainer.offsetTop;
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
+
+  function onMouseMove(e) {
+    if (!drag) return;
+    chatContainer.style.left = `${e.clientX - offsetX}px`;
+    chatContainer.style.top = `${e.clientY - offsetY}px`;
+  }
+
+  function onMouseUp() {
+    drag = false;
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  }
 });

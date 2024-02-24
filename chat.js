@@ -124,8 +124,6 @@ document.getElementById('user-input').addEventListener('keydown', function(event
 
 const chatContainer = document.querySelector('.chat-container');
 
-    let isDragging = false;
-    let dragOffsetX, dragOffsetY;
     
     chatContainer.addEventListener('mousedown', (e) => {
       isDragging = true;

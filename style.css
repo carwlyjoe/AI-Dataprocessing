@@ -6,7 +6,7 @@
     
         .chat-container {
 
-            position: fixed; /* Fixed positioning relative to the viewport */
+            position: absolute; /* 支持拖动 */
             transform: translate(-10%,-10% ); /* Offset the container by half its width and height */
             top: 50%; /* Center vertically */
             left: 50%; /* Center horizontally */

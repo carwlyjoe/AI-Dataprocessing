@@ -1,7 +1,7 @@
 
 
 
-const apiKey = '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';
+const apiKey = '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';
 let messagesHistory = [];
 
 async function sendMessage(text) {

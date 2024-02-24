@@ -1,0 +1,203 @@
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+            font-family: 'Arial', sans-serif;
+        }
+    
+        .chat-container {
+
+            position: fixed; /* Fixed positioning relative to the viewport */
+            transform: translate(-10%,-10% ); /* Offset the container by half its width and height */
+            top: 50%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            display: none; /* Start hidden and toggle with JavaScript */
+            /* Add your width, height, or max-width/max-height as needed */
+            z-index: 1000; /* Make sure it's above other content */
+            /* Add other styles like padding, border, etc., as needed */
+            width: 800px; /* Adjust as needed */
+            height: 1300px; /* Adjust as needed */
+          }
+        
+          .github-issues-link {
+            position: fixed !important;
+            top: 40px !important; /* 将按钮固定在页面的顶部 */
+            right: 0 !important; /* 将按钮固定在页面的右侧 */
+            z-index: 1000 !important; /* 确保链接在其他内容之上 */
+          }
+          
+          
+        #close-live2d {
+            position: fixed;
+            bottom: 10px; /* 调整到合适的位置 */
+            right: 20px; /* 调整到合适的位置 */
+            width: 80px; /* 按钮宽度 */
+            height: 30px; /* 按钮高度 */
+        }
+        
+        #chat-btn {
+            position: fixed;
+            bottom: 10px; /* 与关闭桌宠按钮相同，确保同高 */
+            right: 130px; /* 根据关闭桌宠按钮的宽度加间距进行调整 */
+            width: 80px; /* 与关闭桌宠按钮相同，确保同宽 */
+            height: 30px; /* 与关闭桌宠按钮相同，确保同高 */
+        }
+
+          
+        .chat-box {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+    
+        .chat-header {
+            position: relative; /* 为了绝对定位清空按钮 */
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .clear-chat-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background-color: #ffffff; /* 背景颜色 */
+            color: #007bff; /* 图标颜色 */
+            border: none;
+            border-radius: 50%; /* 圆形按钮 */
+            padding: 5px;
+            cursor: pointer;
+            font-size: 1em; /* 图标大小 */
+            line-height: 1; /* 使图标垂直居中 */
+            outline: none; /* 移除焦点时的轮廓 */
+        }
+
+         /* 鼠标悬停时改变图标颜色 */
+        .clear-chat-btn:hover {
+            color: #dc3545;
+            background-color: #e2e6ea;
+        }
+    
+        .chat-body {
+            padding: 15px;
+            height: 300px; /* 之前是 max-height，现在设置为固定高度 */
+            overflow-y: auto;
+        }
+    
+        .chat-footer {
+            display: flex; /* 使用flex布局 */
+            justify-content: space-between; /* 子元素间隔开来 */
+            align-items: center; /* 垂直居中 */
+            padding: 15px;
+            border-top: 1px solid #dee2e6;
+        }
+    
+        .chat-input {
+            height: 50px; /* 设置输入框的固定高度 */
+            flex-grow: 1; /* 输入框占据剩余空间 */
+            margin-right: 10px; /* 与发送按钮的间隔 */
+            padding: 8px;
+            border-radius: 20px;
+            border: 1px solid #ced4da;
+        }
+    
+        .send-btn {
+            padding: 8px 16px;
+            border: none;
+            background-color: #4caf50;
+            color: #ffffff;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+    
+        /* Styles for messages and bubbles */
+        .message {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+    
+        .message.sent {
+            align-items: flex-end;
+        }
+    
+        .message.received {
+            align-items: flex-start;
+        }
+    
+        .nickname {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 4px;
+        }
+    
+        .bubble {
+            border-radius: 18px;
+            padding: 10px 16px;
+            background-clip: padding-box;
+            margin: 5px 0;
+            word-break: break-word;
+            max-width: fit-content;
+            max-width: -moz-fit-content; /* For Mozilla browsers */
+        }
+    
+        .message.received .bubble {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+    
+        .message.sent .bubble {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+    
+        /* Tail for received bubble */
+        .message.received .bubble::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-right-color: #f0f0f0;
+            left: -20px;
+            bottom: 0;
+            border-left: none;
+        }
+    
+        /* Tail for sent bubble */
+        .message.sent .bubble::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-left-color: #007bff;
+            right: -20px;
+            bottom: 0;
+            border-right: none;
+        }
+
+
+        /* Style for the code block container */
+        pre.code-block {
+            background-color: #1e1e1e; /* Dark background for code block */
+            color: #dcdcdc; /* Light grey text color */
+            border-radius: 4px; /* Rounded corners */
+            padding: 10px; /* Padding inside the code block */
+            overflow-x: auto; /* Horizontal scroll if the content is too wide */
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace; /* Font style for code */
+            margin: 5px 0; /* Margin around the code block */
+            white-space: pre; /* Preserves whitespace and formatting */
+        }
+
+
+        /* Optional: Style for inline code snippets */
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        }

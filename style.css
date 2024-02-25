@@ -3,29 +3,7 @@
             padding: 20px;
             font-family: 'Arial', sans-serif;
         }
-    
-        .chat-container {
 
-            position: absolute; /* 支持拖动 */
-            transform: translate(-10%,-10% ); /* Offset the container by half its width and height */
-            top: 50%; /* Center vertically */
-            left: 50%; /* Center horizontally */
-            display: none; /* Start hidden and toggle with JavaScript */
-            /* Add your width, height, or max-width/max-height as needed */
-            z-index: 1000; /* Make sure it's above other content */
-            /* Add other styles like padding, border, etc., as needed */
-            width: 800px; /* Adjust as needed */
-            height: 1300px; /* Adjust as needed */
-          }
-        
-          .github-issues-link {
-            position: fixed !important;
-            top: 40px !important; /* 将按钮固定在页面的顶部 */
-            right: 0 !important; /* 将按钮固定在页面的右侧 */
-            z-index: 1000 !important; /* 确保链接在其他内容之上 */
-          }
-          
-          
         #close-live2d {
             position: fixed;
             bottom: 10px; /* 调整到合适的位置 */
@@ -33,8 +11,28 @@
             width: 80px; /* 按钮宽度 */
             height: 30px; /* 按钮高度 */
         }
-        
-        #chat-btn {
+
+        .github-issues-link {
+          position: fixed !important;
+          top: 40px !important; /* 将按钮固定在页面的顶部 */
+          right: 0 !important; /* 将按钮固定在页面的右侧 */
+          z-index: 1000 !important; /* 确保链接在其他内容之上 */
+        }
+
+
+    
+        .chat-container {
+
+            position: absolute; /* 支持拖动 */
+            top: 50%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            /* Add your width, height, or max-width/max-height as needed */
+            z-index: 1000; /* Make sure it's above other content */
+            /*改变对话框大小*/
+            width: 800px; /* Adjust as needed */
+            height: 1300px; /* Adjust as needed */
+          }
+          #chat-btn {
             position: fixed;
             bottom: 10px; /* 与关闭桌宠按钮相同，确保同高 */
             right: 130px; /* 根据关闭桌宠按钮的宽度加间距进行调整 */
@@ -44,13 +42,102 @@
 
           
         .chat-box {
+            position: relative; /* 支持拖动 */
             background-color: #ffffff;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             overflow: hidden;
         }
-    
+
+        #settings-container {
+          display: flex; /* 使用flex布局 */
+          flex-direction: column; /* 子元素垂直排列 */
+          justify-content: center; /* 垂直居中 */
+          align-items: flex-start; /* Align items to the start of the flex container */
+          width: 100%; /* 容器宽度 */
+          height: calc(100% - 60px); /* 容器高度，减去chat-header的高度 */
+          position: absolute; /* 相对于父元素绝对定位 */
+          top: 60px; /* chat-header的高度 */
+          left: 0;
+          z-index: 2; /* 显示在其他内容之上 */
+          display: none; /* 默认不显示 */
+          border-radius: 10px; /* 圆角边框 */
+          padding: 20px; /* 内边距 */
+          background: white; /* Light grey background */
+          border: 1px solid #e0e0e0; /* Light border for definition */
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+
+        #settings-container > div {
+          margin: 10px 0; /* 每个设置项之间的间距 */
+          width: 80%; /* 设置项宽度 */
+          background: #ffffff; /* White background for each setting */
+          padding: 10px;
+          margin-bottom: 15px; /* Space between settings */
+          border-radius: 8px; /* Rounded corners for the setting blocks */
+        }
+
+        #settings-container label {
+          display: block; /* 标签独占一行 */
+          margin-bottom: 5px; /* 标签和输入框之间的间距 */
+          font-weight: bold; /* Make labels bold */
+          color: #333; /* Dark grey color for text */
+          margin-bottom: 8px; /* Space below the label */
+        }
+
+        #settings-container input {
+          width: 100%; /* 输入框宽度 */
+          padding: 10px; /* 输入框内边距 */
+          margin-bottom: 10px; /* 输入框之间的间距 */
+          border: 1px solid #ced4da; /* 边框样式 */
+          border-radius: 5px; /* 边框圆角 */
+        }
+
+        /* Slider Style */
+        input[type="range"] {
+          width: 100%; /* Full width */
+          height: 4px; /* Specified height */
+          background: #d3d3d3; /* Light grey track */
+          outline: none; /* Remove outline */
+          opacity: 0.7; /* Partial transparency */
+          -webkit-transition: .2s; /* Smooth transitions */
+          transition: opacity .2s;
+          border-radius: 5px; /* Rounded corners for the slider */
+        }
+
+        /* Settings Wrapper Style */
+        .settings-wrapper {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px;
+          margin-bottom: 20px;
+        }
+
+                /* Label style */
+        .settings-label {
+          margin-right: 10px; /* Ensure space between label and select box */
+
+        }
+
+        /* Settings Select Style */
+        .settings-select {
+          width: calc(100% - 120px); /* Adjust width as needed, 120px accounts for label width */
+          padding: 5px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          font-size: 1rem;
+        }
+
+
+
+        .chat-body {
+            padding: 15px;
+            height: 300px; /* 之前是 max-height，现在设置为固定高度 */
+            overflow-y: auto;
+        }
+            
         .chat-header {
             position: relative; /* 为了绝对定位清空按钮 */
             background-color: #007bff;
@@ -81,11 +168,7 @@
             background-color: #e2e6ea;
         }
     
-        .chat-body {
-            padding: 15px;
-            height: 300px; /* 之前是 max-height，现在设置为固定高度 */
-            overflow-y: auto;
-        }
+
     
         .chat-footer {
             display: flex; /* 使用flex布局 */
@@ -200,4 +283,52 @@
             padding: 2px 4px;
             border-radius: 4px;
             font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        }
+
+                /* 设置按钮样式 */
+        .settings-btn {
+              position: absolute;
+              right: 50px; /* 根据实际情况调整位置 */
+              top: 10px;
+              background-color: #ffffff;
+              color: #007bff;
+              border: none;
+              border-radius: 50%;
+              padding: 5px;
+              cursor: pointer;
+              font-size: 1em;
+              line-height: 1;
+              outline: none;
+          }
+
+        .settings-btn:hover {
+            color: #0056b3;
+            background-color: #e2e6ea;
+        }
+
+        .setting-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 10px;
+          border: 1px solid #e0e0e0;
+          margin-bottom: 10px;
+
+        }
+
+        .setting-item label {
+          margin-right: 20px;
+
+        }
+
+        .select-wrapper {
+          flex: 1;
+        }
+
+        #model-selector {
+          width: 100%;
+          padding: 5px 10px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          font-size: 1rem;
         }

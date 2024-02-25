@@ -1,47 +1,78 @@
-
-
-
-const apiKey = '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';
+let apiKey; // 移除初始值，以便动态设置
+let proxyUrl; // 新增变量以存储代理地址
 let messagesHistory = [];
 
-async function sendMessage(text) {
-  try {
-    // 更新对话历史
-    messagesHistory.push({role: 'user', content: text});
+// 动态设置API Key和代理地址的事件监听器
+document.getElementById('api-key').addEventListener('change', function(event) {
+  localStorage.setItem('apiKey', event.target.value); // 存储API Key到localStorage
+});
+document.getElementById('proxy-url').addEventListener('change', function(event) {
+  localStorage.setItem('proxyUrl', event.target.value); // 存储代理地址到localStorage
+});
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+async function sendMessage(text) {
+  const currentApiKey = localStorage.getItem('apiKey') || '默认的API Key';
+  const currentProxyUrl = localStorage.getItem('proxyUrl') || '默认的代理地址';
+  const selectedModel = localStorage.getItem('selectedModel') || 'gpt-3.5-turbo';
+  // 获取用户设置的参数值，如果未设置则使用默认值
+  const temperature = localStorage.getItem('temperature') || 0.5;
+  const topP = localStorage.getItem('topP') || 1;
+  const maxTokens = localStorage.getItem('maxTokens') || 1000;
+  const presencePenalty = localStorage.getItem('presencePenalty') || 0;
+  const frequencyPenalty = localStorage.getItem('frequencyPenalty') || 0;
+
+  // 更新对话历史
+  messagesHistory.push({ role: 'user', content: text });
+
+  try {
+    const response = await fetch(currentProxyUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
+        'Authorization': `Bearer ${currentApiKey}`
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
+        model: selectedModel,
         messages: messagesHistory,
+        temperature: parseFloat(temperature),
+        top_p: parseFloat(topP),
+        max_tokens: parseInt(maxTokens),
+        presence_penalty: parseFloat(presencePenalty),
+        frequency_penalty: parseFloat(frequencyPenalty)
       }),
     });
-
     if (!response.ok) {
-      throw new Error('网络请求失败'); // 当HTTP状态码非2xx时
+      const errorBody = await response.text(); // 获取错误响应本体
+      throw new Error(`请求失败，错误信息：${errorBody}`);
     }
 
     const data = await response.json();
     if (!data.choices || data.choices.length === 0 || !data.choices[0].message.content) {
-      throw new Error('返回值为空或格式不正确'); // 当返回的数据为空或格式不符合预期时
+      throw new Error('返回值为空或格式不正确');
     }
 
     const botMessage = data.choices[0].message.content;
-    
-    // 将ChatGPT的回复也添加到对话历史中
     messagesHistory.push({role: 'system', content: botMessage});
     
     return botMessage;
   } catch (error) {
     console.error('发送消息时发生错误:', error);
-    return "Bot无法正常工作，请检查代理是否正确设置"; // 向用户展示错误信息
+    return `发生错误：${error.message}`; // 将错误信息返回给用户
   }
 }
 
+
+
+
+
+
+// 存储设置值
+document.getElementById('api-key').addEventListener('change', function(event) {
+  apiKey = event.target.value; // 存储API Key
+});
+document.getElementById('proxy-url').addEventListener('change', function(event) {
+  proxyUrl = event.target.value; // 存储代理地址
+});
 
 
 
@@ -171,4 +202,77 @@ document.addEventListener('DOMContentLoaded', () => {
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
   }
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const settingsButton = document.getElementById('settings-button');
+  const chatContainer = document.querySelector('.chat-box');
+  const chatBody = document.getElementById('messages');
+  const chatFooter = document.querySelector('.chat-footer');
+  const settingsContainer = document.getElementById('settings-container');
+
+  // 点击设置按钮时切换显示
+  settingsButton.addEventListener('click', function() {
+    // 检查settings-container是否可见
+    const isSettingsVisible = settingsContainer.style.display === 'block';
+
+    // 切换settings-container的可见性
+    settingsContainer.style.display = isSettingsVisible ? 'none' : 'block';
+
+    // 而不是删除聊天内容，只是隐藏它们
+    chatBody.style.visibility = isSettingsVisible ? 'visible' : 'hidden';
+    chatFooter.style.visibility = isSettingsVisible ? 'visible' : 'hidden';
+    
+    // 额外的样式调整，确保当设置显示时chat-container的大小不变
+    chatContainer.style.height = isSettingsVisible ? 'auto' : 'calc(100% - 60px)';
+  });
+});
+
+// 页面加载完毕后填充模型选择下拉菜单
+document.addEventListener('DOMContentLoaded', () => {
+  const modelSelector = document.getElementById('model-selector');
+  const models = ['gpt-4-0314', 'gpt-4-0613', 'gpt-4-32k', 'gpt-4-32k-0314', 'gpt-4-32k-0613', 'gpt-4-1106-preview', 'gpt-4-vision-preview', 'gpt-3.5-turbo', 'gpt-3.5-turbo-0301', 'gpt-3.5-turbo-0613', 'gpt-3.5-turbo-1106', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo-16k-0613'
+  ];
+  models.forEach(model => {
+    const option = new Option(model, model);
+    modelSelector.appendChild(option);
+  });
+});
+
+// 页面加载完毕后，设置滑块的初始值显示
+document.addEventListener('DOMContentLoaded', () => {
+  // 为每个滑块设置事件监听器
+  const temperatureSlider = document.getElementById('temperature-slider');
+  const temperatureValueDisplay = document.getElementById('temperature-value');
+
+  temperatureSlider.oninput = function() {
+    temperatureValueDisplay.textContent = this.value;
+    localStorage.setItem('temperature', this.value);
+  };
+
+    // Top P slider
+    const topPSlider = document.getElementById('top-p-slider');
+  const topPValueDisplay = document.getElementById('top-p-value');
+  topPSlider.oninput = function() {
+    topPValueDisplay.textContent = this.value;
+    localStorage.setItem('topP', this.value);
+  };
+
+  // Presence Penalty slider
+  const presencePenaltySlider = document.getElementById('presence-penalty-slider');
+  const presencePenaltyValueDisplay = document.getElementById('presence-penalty-value');
+  presencePenaltySlider.oninput = function() {
+    presencePenaltyValueDisplay.textContent = this.value;
+    localStorage.setItem('presencePenalty', this.value);
+  };
+
+  // Frequency Penalty slider
+  const frequencyPenaltySlider = document.getElementById('frequency-penalty-slider');
+  const frequencyPenaltyValueDisplay = document.getElementById('frequency-penalty-value');
+  frequencyPenaltySlider.oninput = function() {
+    frequencyPenaltyValueDisplay.textContent = this.value;
+    localStorage.setItem('frequencyPenalty', this.value);
+  };
+
 });

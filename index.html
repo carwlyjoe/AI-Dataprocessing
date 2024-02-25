@@ -112,6 +112,19 @@
     height: auto;
   }
 
+  .github-issues-link {
+    position: fixed;
+    top: 50%; /* 或者您想要的任何位置 */
+    right: 20px; /* 根据页面布局调整 */
+    transform: translateY(-50%);
+    background: #fff; /* 为了更好的可见性 */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    z-index: 1000; /* 确保它在页面其他内容上方 */
+  }
+
 </style>
 </head>
 <body>
@@ -439,6 +452,8 @@ function newlineToComma() {
   copyButton.disabled = processedOutput.value === '';
   });
 
+
+
 </script>
 
 <!-- ...您现有的代码... -->
@@ -634,8 +649,9 @@ function escapeRegExp(string) {
 <div class="chat-container">
   <div class="chat-box">
       <div class="chat-header">
-          ChatGPT （请挂梯子使用）
+          ChatGPT
           <button id="clear-chat" class="clear-chat-btn"><i class="fas fa-broom"></i></button>
+          <button id="settings-button" class="settings-btn"><i class="fas fa-cog"></i></button>
       </div>
       <div class="chat-body" id="messages">
           <!-- Chat messages will be added here -->
@@ -644,6 +660,59 @@ function escapeRegExp(string) {
           <textarea id="user-input" class="chat-input" placeholder="Enter发送消息"></textarea>
           <button id="send-btn" class="send-btn">发送</button>
       </div>
+
+    <!-- 设置区域容器，初始时隐藏 -->
+  <div id="settings-container" style="display:none;">
+    <div>
+      <label for="api-key">API Key:</label>
+      <input type="text" id="api-key" placeholder="输入你的API Key">
+    </div>
+    <div>
+      <label for="proxy-url">代理地址:</label>
+      <input type="text" id="proxy-url" placeholder="输入你的代理地址">
+    </div>
+          <!-- 在settings-container中添加模型选择 -->
+
+    
+      <div class="setting-item">
+        <label for="model-selector">选择模型:</label>
+        <div class="select-wrapper">
+          <select id="model-selector">
+            <!-- 动态添加选项 -->
+          </select>
+        </div>
+      </div>
+    <div>
+        <label for="temperature-slider">温度 (temperature):</label>
+        <input type="range" id="temperature-slider" min="0" max="1" step="0.01" value="0.5">
+        <span id="temperature-value">0.5</span>
+      </div>
+                <!-- Top P (排名概率) -->
+      <div>
+        <label for="top-p-slider">核采样 (top_p):</label>
+        <input type="range" id="top-p-slider" min="0" max="1" step="0.01" value="1">
+        <span id="top-p-value">1</span>
+      </div>
+
+      <!-- Presence Penalty (存在惩罚) -->
+      <div>
+        <label for="presence-penalty-slider">话题新鲜度 (presence_penalty):</label>
+        <input type="range" id="presence-penalty-slider" min="-2" max="2" step="0.01" value="0">
+        <span id="presence-penalty-value">0</span>
+      </div>
+
+      <!-- Frequency Penalty (频率惩罚) -->
+      <div>
+        <label for="frequency-penalty-slider">频率惩罚度 (frequency_penalty):</label>
+        <input type="range" id="frequency-penalty-slider" min="-2" max="2" step="0.01" value="0">
+        <span id="frequency-penalty-value">0</span>
+      </div>
+
+      </div>
+      <!-- 重复以上结构以添加其他参数控制 -->
+
+    </div>
+  </div>
   </div>
 </div>
 
@@ -713,4 +782,3 @@ document.getElementById('live2d-container').addEventListener('mouseout', functio
 
 
 </script>
-

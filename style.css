@@ -1,339 +1,339 @@
-        body {
-            background-color: #f8f9fa;
-            padding: 20px;
-            font-family: 'Arial', sans-serif;
-        }
+body {
+  background-color: #f8f9fa;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+}
 
-        #close-live2d {
-            position: fixed;
-            bottom: 10px; /* 调整到合适的位置 */
-            right: 20px; /* 调整到合适的位置 */
-            width: 80px; /* 按钮宽度 */
-            height: 30px; /* 按钮高度 */
-        }
+#close-live2d {
+  position: fixed;
+  bottom: 10px; /* 调整到合适的位置 */
+  right: 20px; /* 调整到合适的位置 */
+  width: 80px; /* 按钮宽度 */
+  height: 30px; /* 按钮高度 */
+}
 
-        .github-issues-link {
-          position: fixed !important;
-          top: 40px !important; /* 将按钮固定在页面的顶部 */
-          right: 0 !important; /* 将按钮固定在页面的右侧 */
-          z-index: 1000 !important; /* 确保链接在其他内容之上 */
-        }
-
-
-    
-        .chat-container {
-
-            position: absolute; /* 支持拖动 */
-            top: 50%; /* Center vertically */
-            left: 50%; /* Center horizontally */
-            /* Add your width, height, or max-width/max-height as needed */
-            z-index: 1000; /* Make sure it's above other content */
-            /*改变对话框大小*/
-            width: 800px; /* Adjust as needed */
-            height: 500px; /* Adjust as needed */
-          }
-          #chat-btn {
-            position: fixed;
-            bottom: 10px; /* 与关闭桌宠按钮相同，确保同高 */
-            right: 130px; /* 根据关闭桌宠按钮的宽度加间距进行调整 */
-            width: 80px; /* 与关闭桌宠按钮相同，确保同宽 */
-            height: 30px; /* 与关闭桌宠按钮相同，确保同高 */
-        }
-
-          
-        .chat-box {
-            position: relative; /* 支持拖动 */
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-
-        #settings-container {
-          display: flex; /* 使用flex布局 */
-          flex-direction: column; /* 子元素垂直排列 */
-          justify-content: center; /* 垂直居中 */
-          align-items: flex-start; /* Align items to the start of the flex container */
-          width: 100%; /* 容器宽度 */
-          height: calc(100% - 60px); /* 容器高度，减去chat-header的高度 */
-          position: absolute; /* 相对于父元素绝对定位 */
-          top: 38px; /* chat-header的高度 */
-          left: 0;
-          z-index: 2; /* 显示在其他内容之上 */
-          display: none; /* 默认不显示 */
-          border-radius: 0 0 10px 10px; /* Top-left, top-right, bottom-right, bottom-left */
-          padding: 20px; /* 内边距 */
-          background: white; /* Light grey background */
-          border: 1px solid #e0e0e0; /* Light border for definition */
-          max-height: 600px; /* Replace with the desired maximum height */
-          overflow-y: auto; /* Adds a scrollbar if the content overflows */
+.github-issues-link {
+position: fixed !important;
+top: 40px !important; /* 将按钮固定在页面的顶部 */
+right: 0 !important; /* 将按钮固定在页面的右侧 */
+z-index: 1000 !important; /* 确保链接在其他内容之上 */
+}
 
 
 
-        }
+.chat-container {
+  display: none;
+  position: absolute; /* 支持拖动 */
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  /* Add your width, height, or max-width/max-height as needed */
+  z-index: 1000; /* Make sure it's above other content */
+  /*改变对话框大小*/
+  width: 800px; /* Adjust as needed */
+  height: 500px; /* Adjust as needed */
+}
+#chat-btn {
+  position: fixed;
+  bottom: 10px; /* 与关闭桌宠按钮相同，确保同高 */
+  right: 130px; /* 根据关闭桌宠按钮的宽度加间距进行调整 */
+  width: 80px; /* 与关闭桌宠按钮相同，确保同宽 */
+  height: 30px; /* 与关闭桌宠按钮相同，确保同高 */
+}
 
-        #settings-container > div {
-          margin: 10px 0; /* 每个设置项之间的间距 */
-          width: 80%; /* 设置项宽度 */
-          background: #ffffff; /* White background for each setting */
-          padding: 10px;
-          margin-bottom: 15px; /* Space between settings */
-          border-radius: 8px; /* Rounded corners for the setting blocks */
-        }
 
-        #settings-container label {
-          display: block; /* 标签独占一行 */
-          margin-bottom: 5px; /* 标签和输入框之间的间距 */
-          font-weight: bold; /* Make labels bold */
-          color: #333; /* Dark grey color for text */
-          margin-bottom: 8px; /* Space below the label */
-        }
+.chat-box {
+  position: relative; /* 支持拖动 */
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
 
-        #settings-container input {
-          width: 100%; /* 输入框宽度 */
-          padding: 10px; /* 输入框内边距 */
-          margin-bottom: 10px; /* 输入框之间的间距 */
-          border: 1px solid #ced4da; /* 边框样式 */
-          border-radius: 5px; /* 边框圆角 */
-        }
-
-        /* Slider Style */
-        input[type="range"] {
-          width: 100%; /* Full width */
-          height: 4px; /* Specified height */
-          background: #d3d3d3; /* Light grey track */
-          outline: none; /* Remove outline */
-          opacity: 0.7; /* Partial transparency */
-          -webkit-transition: .2s; /* Smooth transitions */
-          transition: opacity .2s;
-          border-radius: 5px; /* Rounded corners for the slider */
-        }
-
-        /* Settings Wrapper Style */
-        .settings-wrapper {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 10px;
-          margin-bottom: 20px;
-        }
-
-                /* Label style */
-        .settings-label {
-          margin-right: 10px; /* Ensure space between label and select box */
-
-        }
-
-        /* Settings Select Style */
-        .settings-select {
-          width: calc(100% - 120px); /* Adjust width as needed, 120px accounts for label width */
-          padding: 5px;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-          font-size: 1rem;
-        }
+#settings-container {
+display: flex; /* 使用flex布局 */
+flex-direction: column; /* 子元素垂直排列 */
+justify-content: center; /* 垂直居中 */
+align-items: flex-start; /* Align items to the start of the flex container */
+width: 100%; /* 容器宽度 */
+height: calc(100% - 60px); /* 容器高度，减去chat-header的高度 */
+position: absolute; /* 相对于父元素绝对定位 */
+top: 45px; /* chat-header的高度 */
+left: 0;
+z-index: 2; /* 显示在其他内容之上 */
+display: none; /* 默认不显示 */
+border-radius: 0 0 10px 10px; /* Top-left, top-right, bottom-right, bottom-left */
+padding: 20px; /* 内边距 */
+background: white; /* Light grey background */
+border: 1px solid #e0e0e0; /* Light border for definition */
+max-height: 600px; /* Replace with the desired maximum height */
+overflow-y: auto; /* Adds a scrollbar if the content overflows */
 
 
 
-        .chat-body {
-            padding: 15px;
-            height: 300px; /* 之前是 max-height，现在设置为固定高度 */
-            overflow-y: auto;
-        }
-            
-        .chat-header {
-            position: relative; /* 为了绝对定位清空按钮 */
-            background-color: #007bff;
-            color: #ffffff;
-            padding: 10px;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
+}
 
-        }
+#settings-container > div {
+margin: 10px 0; /* 每个设置项之间的间距 */
+width: 80%; /* 设置项宽度 */
+background: #ffffff; /* White background for each setting */
+padding: 10px;
+margin-bottom: 15px; /* Space between settings */
+border-radius: 8px; /* Rounded corners for the setting blocks */
+}
 
-        .clear-chat-btn {
-            position: absolute;
-            right: 10px;
-            top: 10px;
-            background-color: #ffffff; /* 背景颜色 */
-            color: #007bff; /* 图标颜色 */
-            border: none;
-            border-radius: 50%; /* 圆形按钮 */
-            padding: 5px;
-            cursor: pointer;
-            font-size: 1em; /* 图标大小 */
-            line-height: 1; /* 使图标垂直居中 */
-            outline: none; /* 移除焦点时的轮廓 */
-        }
+#settings-container label {
+display: block; /* 标签独占一行 */
+margin-bottom: 5px; /* 标签和输入框之间的间距 */
+font-weight: bold; /* Make labels bold */
+color: #333; /* Dark grey color for text */
+margin-bottom: 8px; /* Space below the label */
+}
 
-         /* 鼠标悬停时改变图标颜色 */
-        .clear-chat-btn:hover {
-            color: #dc3545;
-            background-color: #e2e6ea;
-        }
-    
+#settings-container input {
+width: 100%; /* 输入框宽度 */
+padding: 10px; /* 输入框内边距 */
+margin-bottom: 10px; /* 输入框之间的间距 */
+border: 1px solid #ced4da; /* 边框样式 */
+border-radius: 5px; /* 边框圆角 */
+}
 
-    
-        .chat-footer {
-            display: flex; /* 使用flex布局 */
-            justify-content: space-between; /* 子元素间隔开来 */
-            align-items: center; /* 垂直居中 */
-            padding: 15px;
-            border-top: 1px solid #dee2e6;
-        }
-    
-        .chat-input {
-            height: 50px; /* 设置输入框的固定高度 */
-            flex-grow: 1; /* 输入框占据剩余空间 */
-            margin-right: 10px; /* 与发送按钮的间隔 */
-            padding: 8px;
-            border-radius: 20px;
-            border: 1px solid #ced4da;
-        }
-    
-        .send-btn {
-            padding: 8px 16px;
-            border: none;
-            background-color: #4caf50;
-            color: #ffffff;
-            border-radius: 20px;
-            cursor: pointer;
-        }
-    
-        /* Styles for messages and bubbles */
-        .message {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 10px;
-        }
-    
-        .message.sent {
-            align-items: flex-end;
-        }
-    
-        .message.received {
-            align-items: flex-start;
-        }
-    
-        .nickname {
-            font-size: 0.85rem;
-            color: #999;
-            margin-bottom: 4px;
-        }
-    
-        .bubble {
-            border-radius: 18px;
-            padding: 10px 16px;
-            background-clip: padding-box;
-            margin: 5px 0;
-            word-break: break-word;
-            max-width: fit-content;
-            max-width: -moz-fit-content; /* For Mozilla browsers */
-        }
-    
-        .message.received .bubble {
-            background-color: #f0f0f0;
-            color: #333;
-        }
-    
-        .message.sent .bubble {
-            background-color: #007bff;
-            color: #ffffff;
-        }
-    
-        /* Tail for received bubble */
-        .message.received .bubble::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 0;
-            border: 10px solid transparent;
-            border-right-color: #f0f0f0;
-            left: -20px;
-            bottom: 0;
-            border-left: none;
-        }
-    
-        /* Tail for sent bubble */
-        .message.sent .bubble::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 0;
-            border: 10px solid transparent;
-            border-left-color: #007bff;
-            right: -20px;
-            bottom: 0;
-            border-right: none;
-        }
+/* Slider Style */
+input[type="range"] {
+width: 100%; /* Full width */
+height: 4px; /* Specified height */
+background: #d3d3d3; /* Light grey track */
+outline: none; /* Remove outline */
+opacity: 0.7; /* Partial transparency */
+-webkit-transition: .2s; /* Smooth transitions */
+transition: opacity .2s;
+border-radius: 5px; /* Rounded corners for the slider */
+}
+
+/* Settings Wrapper Style */
+.settings-wrapper {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 10px;
+margin-bottom: 20px;
+}
+
+      /* Label style */
+.settings-label {
+margin-right: 10px; /* Ensure space between label and select box */
+
+}
+
+/* Settings Select Style */
+.settings-select {
+width: calc(100% - 120px); /* Adjust width as needed, 120px accounts for label width */
+padding: 5px;
+border: 1px solid #ccc;
+border-radius: 4px;
+font-size: 1rem;
+}
 
 
-        /* Style for the code block container */
-        pre.code-block {
-            background-color: #1e1e1e; /* Dark background for code block */
-            color: #dcdcdc; /* Light grey text color */
-            border-radius: 4px; /* Rounded corners */
-            padding: 10px; /* Padding inside the code block */
-            overflow-x: auto; /* Horizontal scroll if the content is too wide */
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace; /* Font style for code */
-            margin: 5px 0; /* Margin around the code block */
-            white-space: pre; /* Preserves whitespace and formatting */
-        }
+
+.chat-body {
+  padding: 15px;
+  height: 300px; /* 之前是 max-height，现在设置为固定高度 */
+  overflow-y: auto;
+}
+  
+.chat-header {
+  position: relative; /* 为了绝对定位清空按钮 */
+  background-color: #007bff;
+  color: #ffffff;
+  padding: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+
+}
+
+.clear-chat-btn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background-color: #ffffff; /* 背景颜色 */
+  color: #007bff; /* 图标颜色 */
+  border: none;
+  border-radius: 50%; /* 圆形按钮 */
+  padding: 5px;
+  cursor: pointer;
+  font-size: 1em; /* 图标大小 */
+  line-height: 1; /* 使图标垂直居中 */
+  outline: none; /* 移除焦点时的轮廓 */
+}
+
+/* 鼠标悬停时改变图标颜色 */
+.clear-chat-btn:hover {
+  color: #dc3545;
+  background-color: #e2e6ea;
+}
 
 
-        /* Optional: Style for inline code snippets */
-        code {
-            background-color: #f4f4f4;
-            padding: 2px 4px;
-            border-radius: 4px;
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-        }
 
-                /* 设置按钮样式 */
-        .settings-btn {
-              position: absolute;
-              right: 50px; /* 根据实际情况调整位置 */
-              top: 10px;
-              background-color: #ffffff;
-              color: #007bff;
-              border: none;
-              border-radius: 50%;
-              padding: 5px;
-              cursor: pointer;
-              font-size: 1em;
-              line-height: 1;
-              outline: none;
-          }
+.chat-footer {
+  display: flex; /* 使用flex布局 */
+  justify-content: space-between; /* 子元素间隔开来 */
+  align-items: center; /* 垂直居中 */
+  padding: 15px;
+  border-top: 1px solid #dee2e6;
+}
 
-        .settings-btn:hover {
-            color: #0056b3;
-            background-color: #e2e6ea;
-        }
+.chat-input {
+  height: 50px; /* 设置输入框的固定高度 */
+  flex-grow: 1; /* 输入框占据剩余空间 */
+  margin-right: 10px; /* 与发送按钮的间隔 */
+  padding: 8px;
+  border-radius: 20px;
+  border: 1px solid #ced4da;
+}
 
-        .setting-item {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 10px;
-          border: 1px solid #e0e0e0;
-          margin-bottom: 10px;
+.send-btn {
+  padding: 8px 16px;
+  border: none;
+  background-color: #4caf50;
+  color: #ffffff;
+  border-radius: 20px;
+  cursor: pointer;
+}
 
-        }
+/* Styles for messages and bubbles */
+.message {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
 
-        .setting-item label {
-          margin-right: 20px;
+.message.sent {
+  align-items: flex-end;
+}
 
-        }
+.message.received {
+  align-items: flex-start;
+}
 
-        .select-wrapper {
-          flex: 1;
-        }
+.nickname {
+  font-size: 0.85rem;
+  color: #999;
+  margin-bottom: 4px;
+}
 
-        #model-selector {
-          width: 100%;
-          padding: 5px 10px;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-          font-size: 1rem;
-        }
+.bubble {
+  border-radius: 18px;
+  padding: 10px 16px;
+  background-clip: padding-box;
+  margin: 5px 0;
+  word-break: break-word;
+  max-width: fit-content;
+  max-width: -moz-fit-content; /* For Mozilla browsers */
+}
+
+.message.received .bubble {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.message.sent .bubble {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+/* Tail for received bubble */
+.message.received .bubble::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 10px solid transparent;
+  border-right-color: #f0f0f0;
+  left: -20px;
+  bottom: 0;
+  border-left: none;
+}
+
+/* Tail for sent bubble */
+.message.sent .bubble::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 10px solid transparent;
+  border-left-color: #007bff;
+  right: -20px;
+  bottom: 0;
+  border-right: none;
+}
+
+
+/* Style for the code block container */
+pre.code-block {
+  background-color: #1e1e1e; /* Dark background for code block */
+  color: #dcdcdc; /* Light grey text color */
+  border-radius: 4px; /* Rounded corners */
+  padding: 10px; /* Padding inside the code block */
+  overflow-x: auto; /* Horizontal scroll if the content is too wide */
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace; /* Font style for code */
+  margin: 5px 0; /* Margin around the code block */
+  white-space: pre; /* Preserves whitespace and formatting */
+}
+
+
+/* Optional: Style for inline code snippets */
+code {
+  background-color: #f4f4f4;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+      /* 设置按钮样式 */
+.settings-btn {
+    position: absolute;
+    right: 50px; /* 根据实际情况调整位置 */
+    top: 10px;
+    background-color: #ffffff;
+    color: #007bff;
+    border: none;
+    border-radius: 50%;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    line-height: 1;
+    outline: none;
+}
+
+.settings-btn:hover {
+  color: #0056b3;
+  background-color: #e2e6ea;
+}
+
+.setting-item {
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 10px;
+border: 1px solid #e0e0e0;
+margin-bottom: 10px;
+
+}
+
+.setting-item label {
+margin-right: 20px;
+
+}
+
+.select-wrapper {
+flex: 1;
+}
+
+#model-selector {
+width: 100%;
+padding: 5px 10px;
+border: 1px solid #ccc;
+border-radius: 4px;
+font-size: 1rem;
+}

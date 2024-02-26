@@ -1,30 +1,69 @@
-let apiKey; // 移除初始值，以便动态设置
-let proxyUrl; // 新增变量以存储代理地址
 let messagesHistory = [];
 
-// 动态设置API Key和代理地址的事件监听器
-document.getElementById('api-key').addEventListener('change', function(event) {
-  localStorage.setItem('apiKey', event.target.value); // 存储API Key到localStorage
-});
-document.getElementById('proxy-url').addEventListener('change', function(event) {
-  localStorage.setItem('proxyUrl', event.target.value); // 存储代理地址到localStorage
-});
+// Function to initialize model selector and event listeners
+function initializeSettings() {
+  const modelSelector = document.getElementById('model-selector');
+  const models = ['gpt-4','gpt-4-all',
+    'gpt-4-0314', 'gpt-4-0613', 'gpt-4-32k', 'gpt-4-32k-0314',
+    'gpt-4-32k-0613', 'gpt-4-1106-preview', 'gpt-4-vision-preview',
+    'gpt-3.5-turbo', 'gpt-3.5-turbo-0301', 'gpt-3.5-turbo-0613',
+    'gpt-3.5-turbo-1106', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo-16k-0613'
+  ];
+  models.forEach(model => {
+    const option = new Option(model, model);
+    modelSelector.appendChild(option);
+  });
 
+  // Load stored values or set defaults
+  modelSelector.value = localStorage.getItem('selectedModel') || 'gpt-3.5-turbo';
+  document.getElementById('api-key').value = localStorage.getItem('apiKey') || '';
+  document.getElementById('proxy-url').value = localStorage.getItem('proxyUrl') || '';
+
+  // Event listeners for saving settings
+  document.getElementById('api-key').addEventListener('change', function(event) {
+    localStorage.setItem('apiKey', event.target.value.trim());
+  });
+  document.getElementById('proxy-url').addEventListener('change', function(event) {
+    let baseUrl = event.target.value.trim();
+    if (!baseUrl.endsWith('/')) {
+      baseUrl += '/';
+    }
+    localStorage.setItem('proxyUrl', baseUrl + 'v1/chat/completions');
+  });
+  modelSelector.addEventListener('change', function(event) {
+    localStorage.setItem('selectedModel', event.target.value);
+  });
+}
+
+// Call the initialization function when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', initializeSettings);
+
+// sendMessage function
 async function sendMessage(text) {
-  const currentApiKey = localStorage.getItem('apiKey') || '默认的API Key';
-  const currentProxyUrl = localStorage.getItem('proxyUrl') || '默认的代理地址';
+  // Get settings from localStorage
+  const currentApiKey = localStorage.getItem('apiKey') || 'default API Key';
+  let currentProxyUrl = localStorage.getItem('proxyUrl');
+  if (!currentProxyUrl) {
+    currentProxyUrl = 'https://api.openai.com/v1/chat/completions';
+  } else if (!currentProxyUrl.endsWith('v1/chat/completions')) {
+    if (!currentProxyUrl.endsWith('/')) {
+      currentProxyUrl += '/';
+    }
+    currentProxyUrl += 'v1/chat/completions';
+  }
   const selectedModel = localStorage.getItem('selectedModel') || 'gpt-3.5-turbo';
-  // 获取用户设置的参数值，如果未设置则使用默认值
+    // 获取用户设置的参数值，如果未设置则使用默认值
   const temperature = localStorage.getItem('temperature') || 0.5;
   const topP = localStorage.getItem('topP') || 1;
   const maxTokens = localStorage.getItem('maxTokens') || 1000;
   const presencePenalty = localStorage.getItem('presencePenalty') || 0;
   const frequencyPenalty = localStorage.getItem('frequencyPenalty') || 0;
 
-  // 更新对话历史
+  // Update message history
   messagesHistory.push({ role: 'user', content: text });
 
   try {
+    // Fetch the API response
     const response = await fetch(currentProxyUrl, {
       method: 'POST',
       headers: {
@@ -39,16 +78,19 @@ async function sendMessage(text) {
         max_tokens: parseInt(maxTokens),
         presence_penalty: parseFloat(presencePenalty),
         frequency_penalty: parseFloat(frequencyPenalty)
+        // ...other parameters...
       }),
     });
+
+    // Handle the response
     if (!response.ok) {
-      const errorBody = await response.text(); // 获取错误响应本体
-      throw new Error(`请求失败，错误信息：${errorBody}`);
+      const errorBody = await response.text();
+      throw new Error(`Request failed, error message: ${errorBody}`);
     }
 
     const data = await response.json();
     if (!data.choices || data.choices.length === 0 || !data.choices[0].message.content) {
-      throw new Error('返回值为空或格式不正确');
+      throw new Error('Response is empty or has incorrect format');
     }
 
     const botMessage = data.choices[0].message.content;
@@ -56,23 +98,12 @@ async function sendMessage(text) {
     
     return botMessage;
   } catch (error) {
-    console.error('发送消息时发生错误:', error);
-    return `发生错误：${error.message}`; // 将错误信息返回给用户
+    console.error('Error sending message:', error);
+    return `An error occurred: ${error.message}`;
   }
 }
 
 
-
-
-
-
-// 存储设置值
-document.getElementById('api-key').addEventListener('change', function(event) {
-  apiKey = event.target.value; // 存储API Key
-});
-document.getElementById('proxy-url').addEventListener('change', function(event) {
-  proxyUrl = event.target.value; // 存储代理地址
-});
 
 
 
@@ -152,57 +183,37 @@ document.getElementById('user-input').addEventListener('keydown', function(event
         event.preventDefault(); // 防止默认行为，例如换行
         document.getElementById('send-btn').click(); // 触发发送按钮的点击事件
     }
+});
 
+// 选择对话框的标题栏，假设它有一个特定的类名，例如 .chat-header
+const chatHeader = document.querySelector('.chat-header');
 const chatContainer = document.querySelector('.chat-container');
 
-    let isDragging = false;
-    let dragOffsetX, dragOffsetY;
-    
-    chatContainer.addEventListener('mousedown', (e) => {
-      isDragging = true;
-      dragOffsetX = e.clientX - chatContainer.offsetLeft;
-      dragOffsetY = e.clientY - chatContainer.offsetTop;
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-    });
-    
-    function onMouseMove(e) {
-      if (isDragging) {
-        chatContainer.style.left = `${e.clientX - dragOffsetX}px`;
-        chatContainer.style.top = `${e.clientY - dragOffsetY}px`;
-      }
-    }
-    
-    function onMouseUp() {
-      isDragging = false;
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    }
+let isDragging = false;
+let dragOffsetX, dragOffsetY;
+
+chatHeader.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  dragOffsetX = e.clientX - chatContainer.offsetLeft;
+  dragOffsetY = e.clientY - chatContainer.offsetTop;
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+  e.preventDefault(); // 这可以防止选择文本的默认行为，同时允许拖动
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-
-  // 当用户按下鼠标时开始拖动
-  chatContainer.addEventListener('mousedown', (e) => {
-    drag = true;
-    offsetX = e.clientX - chatContainer.offsetLeft;
-    offsetY = e.clientY - chatContainer.offsetTop;
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  });
-
-  function onMouseMove(e) {
-    if (!drag) return;
-    chatContainer.style.left = `${e.clientX - offsetX}px`;
-    chatContainer.style.top = `${e.clientY - offsetY}px`;
+function onMouseMove(e) {
+  if (isDragging) {
+    chatContainer.style.left = `${e.clientX - dragOffsetX}px`;
+    chatContainer.style.top = `${e.clientY - dragOffsetY}px`;
   }
+}
 
-  function onMouseUp() {
-    drag = false;
-    document.removeEventListener('mousemove', onMouseMove);
-    document.removeEventListener('mouseup', onMouseUp);
-  }
-});
+function onMouseUp() {
+  isDragging = false;
+  document.removeEventListener('mousemove', onMouseMove);
+  document.removeEventListener('mouseup', onMouseUp);
+}
+
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -230,15 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // 页面加载完毕后填充模型选择下拉菜单
-document.addEventListener('DOMContentLoaded', () => {
-  const modelSelector = document.getElementById('model-selector');
-  const models = ['gpt-4-0314', 'gpt-4-0613', 'gpt-4-32k', 'gpt-4-32k-0314', 'gpt-4-32k-0613', 'gpt-4-1106-preview', 'gpt-4-vision-preview', 'gpt-3.5-turbo', 'gpt-3.5-turbo-0301', 'gpt-3.5-turbo-0613', 'gpt-3.5-turbo-1106', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo-16k-0613'
-  ];
-  models.forEach(model => {
-    const option = new Option(model, model);
-    modelSelector.appendChild(option);
-  });
-});
+
 
 // 页面加载完毕后，设置滑块的初始值显示
 document.addEventListener('DOMContentLoaded', () => {

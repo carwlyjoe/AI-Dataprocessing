@@ -30,7 +30,7 @@
             z-index: 1000; /* Make sure it's above other content */
             /*改变对话框大小*/
             width: 800px; /* Adjust as needed */
-            height: 1300px; /* Adjust as needed */
+            height: 500px; /* Adjust as needed */
           }
           #chat-btn {
             position: fixed;
@@ -58,15 +58,19 @@
           width: 100%; /* 容器宽度 */
           height: calc(100% - 60px); /* 容器高度，减去chat-header的高度 */
           position: absolute; /* 相对于父元素绝对定位 */
-          top: 60px; /* chat-header的高度 */
+          top: 38px; /* chat-header的高度 */
           left: 0;
           z-index: 2; /* 显示在其他内容之上 */
           display: none; /* 默认不显示 */
-          border-radius: 10px; /* 圆角边框 */
+          border-radius: 0 0 10px 10px; /* Top-left, top-right, bottom-right, bottom-left */
           padding: 20px; /* 内边距 */
           background: white; /* Light grey background */
           border: 1px solid #e0e0e0; /* Light border for definition */
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+          max-height: 500px; /* Replace with the desired maximum height */
+          overflow-y: auto; /* Adds a scrollbar if the content overflows */
+
+
+
         }
 
         #settings-container > div {
@@ -145,6 +149,7 @@
             padding: 10px;
             border-top-left-radius: 10px;
             border-top-right-radius: 10px;
+
         }
 
         .clear-chat-btn {

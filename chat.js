@@ -17,7 +17,7 @@ models.forEach(model => {
   // Load stored values or set defaults
   modelSelector.value = localStorage.getItem('selectedModel') || 'gpt-3.5-turbo-16k';
   document.getElementById('api-key').value = localStorage.getItem('apiKey') || '54e22def5b8f8b613c1ac05c267a878137bc369ccc60bd50';
-  document.getElementById('proxy-url').value = localStorage.getItem('proxyUrl') || 'https://sapi.onechat.fun';
+  document.getElementById('proxy-url').value = localStorage.getItem('proxyUrl') || 'https://sapi.onechat.fun/v1/chat/completions';
 
   // Event listeners for saving settings
   document.getElementById('api-key').addEventListener('change', function(event) {
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', initializeSettings);
 
 async function sendMessage(text) {
   const currentApiKey = localStorage.getItem('apiKey') || '54e22def5b8f8b613c1ac05c267a878137bc369ccc60bd50';
-  const currentProxyUrl = localStorage.getItem('proxyUrl') || 'https://sapi.onechat.fun';
+  const currentProxyUrl = localStorage.getItem('proxyUrl') || 'https://sapi.onechat.fun/v1/chat/completions';
 
 
   const selectedModel = localStorage.getItem('selectedModel') || 'gpt-3.5-turbo';

@@ -1,23 +1,23 @@
+
 let messagesHistory = [];
 
-// Function to initialize model selector and event listeners
 function initializeSettings() {
-  const modelSelector = document.getElementById('model-selector');
-  const models = ['gpt-4','gpt-4-all',
-    'gpt-4-0314', 'gpt-4-0613', 'gpt-4-32k', 'gpt-4-32k-0314',
-    'gpt-4-32k-0613', 'gpt-4-1106-preview', 'gpt-4-vision-preview',
-    'gpt-3.5-turbo', 'gpt-3.5-turbo-0301', 'gpt-3.5-turbo-0613',
-    'gpt-3.5-turbo-1106', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo-16k-0613'
-  ];
-  models.forEach(model => {
-    const option = new Option(model, model);
-    modelSelector.appendChild(option);
-  });
+const modelSelector = document.getElementById('model-selector');
+const models = ['gpt-4','gpt-4-all',
+  'gpt-4-0314', 'gpt-4-0613', 'gpt-4-32k', 'gpt-4-32k-0314',
+  'gpt-4-32k-0613', 'gpt-4-1106-preview', 'gpt-4-vision-preview',
+  'gpt-3.5-turbo', 'gpt-3.5-turbo-0301', 'gpt-3.5-turbo-0613',
+  'gpt-3.5-turbo-1106', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo-16k-0613'
+];
+models.forEach(model => {
+  const option = new Option(model, model);
+  modelSelector.appendChild(option);
+});
 
   // Load stored values or set defaults
-  modelSelector.value = localStorage.getItem('selectedModel') || 'gpt-3.5-turbo';
-  document.getElementById('api-key').value = localStorage.getItem('apiKey') || '';
-  document.getElementById('proxy-url').value = localStorage.getItem('proxyUrl') || '';
+  modelSelector.value = localStorage.getItem('selectedModel') || 'gpt-3.5-turbo-16k';
+  document.getElementById('api-key').value = localStorage.getItem('apiKey') || '54e22def5b8f8b613c1ac05c267a878137bc369ccc60bd50';
+  document.getElementById('proxy-url').value = localStorage.getItem('proxyUrl') || 'https://sapi.onechat.fun';
 
   // Event listeners for saving settings
   document.getElementById('api-key').addEventListener('change', function(event) {
@@ -35,35 +35,29 @@ function initializeSettings() {
   });
 }
 
-// Call the initialization function when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', initializeSettings);
 
-// sendMessage function
+
+
+
+
 async function sendMessage(text) {
-  // Get settings from localStorage
-  const currentApiKey = localStorage.getItem('apiKey') || 'default API Key';
-  let currentProxyUrl = localStorage.getItem('proxyUrl');
-  if (!currentProxyUrl) {
-    currentProxyUrl = 'https://api.openai.com/v1/chat/completions';
-  } else if (!currentProxyUrl.endsWith('v1/chat/completions')) {
-    if (!currentProxyUrl.endsWith('/')) {
-      currentProxyUrl += '/';
-    }
-    currentProxyUrl += 'v1/chat/completions';
-  }
+  const currentApiKey = localStorage.getItem('apiKey') || '54e22def5b8f8b613c1ac05c267a878137bc369ccc60bd50';
+  const currentProxyUrl = localStorage.getItem('proxyUrl') || 'https://sapi.onechat.fun';
+
+
   const selectedModel = localStorage.getItem('selectedModel') || 'gpt-3.5-turbo';
-    // 获取用户设置的参数值，如果未设置则使用默认值
+  // 获取用户设置的参数值，如果未设置则使用默认值
   const temperature = localStorage.getItem('temperature') || 0.5;
   const topP = localStorage.getItem('topP') || 1;
   const maxTokens = localStorage.getItem('maxTokens') || 1000;
   const presencePenalty = localStorage.getItem('presencePenalty') || 0;
   const frequencyPenalty = localStorage.getItem('frequencyPenalty') || 0;
 
-  // Update message history
+  // 更新对话历史
   messagesHistory.push({ role: 'user', content: text });
 
   try {
-    // Fetch the API response
     const response = await fetch(currentProxyUrl, {
       method: 'POST',
       headers: {
@@ -78,19 +72,16 @@ async function sendMessage(text) {
         max_tokens: parseInt(maxTokens),
         presence_penalty: parseFloat(presencePenalty),
         frequency_penalty: parseFloat(frequencyPenalty)
-        // ...other parameters...
       }),
     });
-
-    // Handle the response
     if (!response.ok) {
-      const errorBody = await response.text();
-      throw new Error(`Request failed, error message: ${errorBody}`);
+      const errorBody = await response.text(); // 获取错误响应本体
+      throw new Error(`请求失败，错误信息：${errorBody}`);
     }
 
     const data = await response.json();
     if (!data.choices || data.choices.length === 0 || !data.choices[0].message.content) {
-      throw new Error('Response is empty or has incorrect format');
+      throw new Error('返回值为空或格式不正确');
     }
 
     const botMessage = data.choices[0].message.content;
@@ -98,14 +89,12 @@ async function sendMessage(text) {
     
     return botMessage;
   } catch (error) {
-    console.error('Error sending message:', error);
-    return `An error occurred: ${error.message}`;
+    console.error('发送消息时发生错误:', error);
+    return `发生错误：${error.message}`; // 将错误信息返回给用户
   }
 }
 
-
-
-
+  
 
 
 function appendMessage(role, text) {
@@ -179,11 +168,10 @@ document.getElementById('clear-chat').addEventListener('click', function() {
 
 
 document.getElementById('user-input').addEventListener('keydown', function(event) {
-    if (event.key === 'Enter' && !event.shiftKey) { // 检测是否是Enter键且没有按住Shift
-        event.preventDefault(); // 防止默认行为，例如换行
-        document.getElementById('send-btn').click(); // 触发发送按钮的点击事件
-    }
-});
+  if (event.key === 'Enter' && !event.shiftKey) { // 检测是否是Enter键且没有按住Shift
+      event.preventDefault(); // 防止默认行为，例如换行
+      document.getElementById('send-btn').click(); // 触发发送按钮的点击事件
+  }
 
 // 选择对话框的标题栏，假设它有一个特定的类名，例如 .chat-header
 const chatHeader = document.querySelector('.chat-header');
@@ -193,26 +181,31 @@ let isDragging = false;
 let dragOffsetX, dragOffsetY;
 
 chatHeader.addEventListener('mousedown', (e) => {
-  isDragging = true;
-  dragOffsetX = e.clientX - chatContainer.offsetLeft;
-  dragOffsetY = e.clientY - chatContainer.offsetTop;
-  document.addEventListener('mousemove', onMouseMove);
-  document.addEventListener('mouseup', onMouseUp);
-  e.preventDefault(); // 这可以防止选择文本的默认行为，同时允许拖动
+isDragging = true;
+dragOffsetX = e.clientX - chatContainer.offsetLeft;
+dragOffsetY = e.clientY - chatContainer.offsetTop;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+e.preventDefault(); // 这可以防止选择文本的默认行为，同时允许拖动
 });
 
 function onMouseMove(e) {
-  if (isDragging) {
-    chatContainer.style.left = `${e.clientX - dragOffsetX}px`;
-    chatContainer.style.top = `${e.clientY - dragOffsetY}px`;
-  }
+if (isDragging) {
+  chatContainer.style.left = `${e.clientX - dragOffsetX}px`;
+  chatContainer.style.top = `${e.clientY - dragOffsetY}px`;
+}
 }
 
 function onMouseUp() {
-  isDragging = false;
-  document.removeEventListener('mousemove', onMouseMove);
-  document.removeEventListener('mouseup', onMouseUp);
+isDragging = false;
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
 }
+
+
+});
+
+
 
 
 
@@ -279,3 +272,4 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
 });
+

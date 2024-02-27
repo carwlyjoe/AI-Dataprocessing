@@ -24,7 +24,7 @@ z-index: 1000 !important; /* 确保链接在其他内容之上 */
 .chat-container {
   display: none;
   position: absolute; /* 支持拖动 */
-  top: 50%; /* Center vertically */
+  top: 5%; /* Center vertically */
   left: 50%; /* Center horizontally */
   /* Add your width, height, or max-width/max-height as needed */
   z-index: 1000; /* Make sure it's above other content */
@@ -64,7 +64,7 @@ z-index: 2; /* 显示在其他内容之上 */
 display: none; /* 默认不显示 */
 border-radius: 0 0 10px 10px; /* Top-left, top-right, bottom-right, bottom-left */
 background: white; /* Light grey background */
-max-height: 510px; /* Replace with the desired maximum height */
+max-height: 800px; /* Replace with the desired maximum height */
 overflow-y: auto; /* Adds a scrollbar if the content overflows */
 padding: 20px;
 }
@@ -133,7 +133,7 @@ font-size: 1rem;
 
 .chat-body {
   padding: 15px;
-  height: 300px; /* 之前是 max-height，现在设置为固定高度 */
+  height: 700px; /* 之前是 max-height，现在设置为固定高度 */
   overflow-y: auto;
 }
   

@@ -16,37 +16,61 @@ models.forEach(model => {
 
   // Load stored values or set defaults
   modelSelector.value = localStorage.getItem('selectedModel') || 'gpt-3.5-turbo-16k';
-  document.getElementById('api-key').value = localStorage.getItem('apiKey') || '54e22def5b8f8b613c1ac05c267a878137bc369ccc60bd50';
+  document.getElementById('api-key').value = localStorage.getItem('apikey') || '54e22def5b8f8b613c1ac05c267a878137bc369ccc60bd50';
   document.getElementById('proxy-url').value = localStorage.getItem('proxyUrl') || 'https://sapi.onechat.fun/v1/chat/completions';
 
   // Event listeners for saving settings
   document.getElementById('api-key').addEventListener('change', function(event) {
-    localStorage.setItem('apiKey', event.target.value.trim());
+    const apiKeyValue = event.target.value.trim();
+    if (apiKeyValue === '') {
+    event.target.value = '54e22def5b8f8b613c1ac05c267a878137bc369ccc60bd50'
+    localStorage.setItem('apikey', event.target.value.trim());
+    } else{
+      localStorage.setItem('apikey',event.target.value);
+    }
   });
+    
+
   document.getElementById('proxy-url').addEventListener('change', function(event) {
     let baseUrl = event.target.value.trim();
-    if (!baseUrl.endsWith('/')) {
-      baseUrl += '/';
+    if (baseUrl === '') {
+      event.target.value = 'https://sapi.onechat.fun/v1/chat/completions';
+      localStorage.setItem('proxyUrl',event.target.value);
+    }else {
+      if(!baseUrl.endsWith('/')){
+       baseUrl += '/';   
+      }      
+      localStorage.setItem('proxyUrl', baseUrl + 'v1/chat/completions');
+
     }
-    localStorage.setItem('proxyUrl', baseUrl + 'v1/chat/completions');
-  });
-  modelSelector.addEventListener('change', function(event) {
+   });
+  
+    modelSelector.addEventListener('change', function(event) {
     localStorage.setItem('selectedModel', event.target.value);
-  });
-}
+  
+  })
+// 选择对话框的标题栏，假设它有一个特定的类名，例如 .chat-header
+
+
+
+  }
+
+
+
 
 document.addEventListener('DOMContentLoaded', initializeSettings);
+  
 
 
 
 
 
 async function sendMessage(text) {
-  const currentApiKey = localStorage.getItem('apiKey') || '54e22def5b8f8b613c1ac05c267a878137bc369ccc60bd50';
+  const currentApiKey = localStorage.getItem('apikey') || '54e22def5b8f8b613c1ac05c267a878137bc369ccc60bd50';
   const currentProxyUrl = localStorage.getItem('proxyUrl') || 'https://sapi.onechat.fun/v1/chat/completions';
 
 
-  const selectedModel = localStorage.getItem('selectedModel') || 'gpt-3.5-turbo';
+  const selectedModel = localStorage.getItem('selectedModel') || 'gpt-3.5-turbo-16k';
   // 获取用户设置的参数值，如果未设置则使用默认值
   const temperature = localStorage.getItem('temperature') || 0.5;
   const topP = localStorage.getItem('topP') || 1;
@@ -85,16 +109,21 @@ async function sendMessage(text) {
     }
 
     const botMessage = data.choices[0].message.content;
-    messagesHistory.push({role: 'system', content: botMessage});
+    messagesHistory.push({role: 'assistant', content: botMessage});
+    //之后我想继续加一个System的角色
     
     return botMessage;
   } catch (error) {
     console.error('发送消息时发生错误:', error);
     return `发生错误：${error.message}`; // 将错误信息返回给用户
   }
+
+
+
+
 }
 
-  
+
 
 
 function appendMessage(role, text) {
@@ -152,9 +181,10 @@ document.addEventListener('DOMContentLoaded', function() {
 document.getElementById('send-btn').addEventListener('click', async () => {
   const userInput = document.getElementById('user-input').value; // 这里获取textarea的值，包含换行
   appendMessage('You', userInput);
+  document.getElementById('user-input').value = ''; // 清空textarea
   const botResponse = await sendMessage(userInput);
   appendMessage('ChatGPT', botResponse);
-  document.getElementById('user-input').value = ''; // 清空textarea
+
 });
 
 document.getElementById('clear-chat').addEventListener('click', function() {
@@ -164,6 +194,37 @@ document.getElementById('clear-chat').addEventListener('click', function() {
     document.getElementById('messages').innerHTML = '';
     // 发送ChatGPT的问候语，开始新一轮对话
     appendMessage('ChatGPT', '你好，有什么可以帮助你的吗？');
+});
+
+
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const settingsButton = document.getElementById('settings-button');
+  const chatContainer = document.querySelector('.chat-box');
+  const chatBody = document.getElementById('messages');
+  const chatFooter = document.querySelector('.chat-footer');
+  const settingsContainer = document.getElementById('settings-container');
+
+  // 点击设置按钮时切换显示
+  settingsButton.addEventListener('click', function() {
+    // 检查settings-container是否可见
+    const isSettingsVisible = settingsContainer.style.display === 'block';
+
+    // 切换settings-container的可见性
+    settingsContainer.style.display = isSettingsVisible ? 'none' : 'block';
+
+    // 而不是删除聊天内容，只是隐藏它们
+    chatBody.style.visibility = isSettingsVisible ? 'visible' : 'hidden';
+    chatFooter.style.visibility = isSettingsVisible ? 'visible' : 'hidden';
+    
+    // 额外的样式调整，确保当设置显示时chat-container的大小不变
+
+  });
 });
 
 
@@ -207,35 +268,6 @@ document.removeEventListener('mouseup', onMouseUp);
 
 
 
-
-
-document.addEventListener('DOMContentLoaded', function() {
-  const settingsButton = document.getElementById('settings-button');
-  const chatContainer = document.querySelector('.chat-box');
-  const chatBody = document.getElementById('messages');
-  const chatFooter = document.querySelector('.chat-footer');
-  const settingsContainer = document.getElementById('settings-container');
-
-  // 点击设置按钮时切换显示
-  settingsButton.addEventListener('click', function() {
-    // 检查settings-container是否可见
-    const isSettingsVisible = settingsContainer.style.display === 'block';
-
-    // 切换settings-container的可见性
-    settingsContainer.style.display = isSettingsVisible ? 'none' : 'block';
-
-    // 而不是删除聊天内容，只是隐藏它们
-    chatBody.style.visibility = isSettingsVisible ? 'visible' : 'hidden';
-    chatFooter.style.visibility = isSettingsVisible ? 'visible' : 'hidden';
-    
-    // 额外的样式调整，确保当设置显示时chat-container的大小不变
-    chatContainer.style.height = isSettingsVisible ? 'auto' : 'calc(100% - 60px)';
-  });
-});
-
-// 页面加载完毕后填充模型选择下拉菜单
-
-
 // 页面加载完毕后，设置滑块的初始值显示
 document.addEventListener('DOMContentLoaded', () => {
   // 为每个滑块设置事件监听器
@@ -248,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
     // Top P slider
-    const topPSlider = document.getElementById('top-p-slider');
+  const topPSlider = document.getElementById('top-p-slider');
   const topPValueDisplay = document.getElementById('top-p-value');
   topPSlider.oninput = function() {
     topPValueDisplay.textContent = this.value;
@@ -272,4 +304,3 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
 });
-

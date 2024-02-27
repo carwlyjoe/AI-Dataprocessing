@@ -63,23 +63,24 @@ document.addEventListener('DOMContentLoaded', initializeSettings);
 
 
 
-
-
 async function sendMessage(text) {
   const currentApiKey = localStorage.getItem('apikey') || '54e22def5b8f8b613c1ac05c267a878137bc369ccc60bd50';
   const currentProxyUrl = localStorage.getItem('proxyUrl') || 'https://sapi.onechat.fun/v1/chat/completions';
 
-
   const selectedModel = localStorage.getItem('selectedModel') || 'gpt-3.5-turbo-16k';
-  // 获取用户设置的参数值，如果未设置则使用默认值
   const temperature = localStorage.getItem('temperature') || 0.5;
   const topP = localStorage.getItem('topP') || 1;
-  const maxTokens = localStorage.getItem('maxTokens') || 1000;
   const presencePenalty = localStorage.getItem('presencePenalty') || 0;
   const frequencyPenalty = localStorage.getItem('frequencyPenalty') || 0;
+  const maxTokens = document.getElementById('max-tokens').value || 2000;
+  const memoryTurns = document.getElementById('memory-turns').value || 5;
 
-  // 更新对话历史
   messagesHistory.push({ role: 'user', content: text });
+
+    // Limit messagesHistory to the last 'memoryTurns' turns
+  if (messagesHistory.length > memoryTurns * 2) { // Assuming each turn includes a user and a system message
+      messagesHistory = messagesHistory.slice(-memoryTurns * 2);
+    }
 
   try {
     const response = await fetch(currentProxyUrl, {
@@ -95,11 +96,14 @@ async function sendMessage(text) {
         top_p: parseFloat(topP),
         max_tokens: parseInt(maxTokens),
         presence_penalty: parseFloat(presencePenalty),
-        frequency_penalty: parseFloat(frequencyPenalty)
+        frequency_penalty: parseFloat(frequencyPenalty),
+        max_tokens: parseInt(maxTokens),
+
       }),
     });
+
     if (!response.ok) {
-      const errorBody = await response.text(); // 获取错误响应本体
+      const errorBody = await response.text();
       throw new Error(`请求失败，错误信息：${errorBody}`);
     }
 
@@ -110,18 +114,17 @@ async function sendMessage(text) {
 
     const botMessage = data.choices[0].message.content;
     messagesHistory.push({role: 'assistant', content: botMessage});
-    //之后我想继续加一个System的角色
-    
+    // 在这里继续添加System角色的逻辑
+    // messagesHistory.push({ role: 'system', content: 'System message content' });
+
     return botMessage;
   } catch (error) {
     console.error('发送消息时发生错误:', error);
-    return `发生错误：${error.message}`; // 将错误信息返回给用户
+    return `发生错误：${error.message}`;
   }
-
-
-
-
 }
+
+
 
 
 
@@ -234,17 +237,21 @@ document.getElementById('user-input').addEventListener('keydown', function(event
       document.getElementById('send-btn').click(); // 触发发送按钮的点击事件
   }
 
+
+
+});
+
 // 选择对话框的标题栏，假设它有一个特定的类名，例如 .chat-header
 const chatHeader = document.querySelector('.chat-header');
-const chatContainer = document.querySelector('.chat-container');
+const chatcontainer = document.querySelector('.chat-container');
 
 let isDragging = false;
 let dragOffsetX, dragOffsetY;
 
 chatHeader.addEventListener('mousedown', (e) => {
 isDragging = true;
-dragOffsetX = e.clientX - chatContainer.offsetLeft;
-dragOffsetY = e.clientY - chatContainer.offsetTop;
+dragOffsetX = e.clientX - chatcontainer.offsetLeft;
+dragOffsetY = e.clientY - chatcontainer.offsetTop;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 e.preventDefault(); // 这可以防止选择文本的默认行为，同时允许拖动
@@ -252,8 +259,8 @@ e.preventDefault(); // 这可以防止选择文本的默认行为，同时允许
 
 function onMouseMove(e) {
 if (isDragging) {
-  chatContainer.style.left = `${e.clientX - dragOffsetX}px`;
-  chatContainer.style.top = `${e.clientY - dragOffsetY}px`;
+  chatcontainer.style.left = `${e.clientX - dragOffsetX}px`;
+  chatcontainer.style.top = `${e.clientY - dragOffsetY}px`;
 }
 }
 
@@ -262,9 +269,6 @@ isDragging = false;
 document.removeEventListener('mousemove', onMouseMove);
 document.removeEventListener('mouseup', onMouseUp);
 }
-
-
-});
 
 
 
@@ -303,4 +307,27 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('frequencyPenalty', this.value);
   };
 
+  const maxTokensSlider = document.getElementById('max-tokens');
+  const maxTokensValueDisplay = document.getElementById('max_tokens-vlaue'); // 注意这里的ID拼写应与HTML中保持一致
+
+  maxTokensSlider.oninput = function() {
+    maxTokensValueDisplay.textContent = this.value;
+    localStorage.setItem('maxTokens', this.value);
+  };
+
+  // Initialize max tokens display
+  maxTokensValueDisplay.textContent = maxTokensSlider.value;
+  localStorage.setItem('maxTokens', maxTokensSlider.value);
+
+
+
+});
+
+document.getElementById('memory-turns').addEventListener('change', function() {
+  if (parseInt(this.value, 10) > 64) {
+    this.value = 64; // Set value to 64 if it exceeds the max
+  } else if (parseInt(this.value, 10) < 1) {
+    this.value = 1; // Ensure value is at least 1
+  }
+  localStorage.setItem('memoryTurns', this.value); // Save the corrected value
 });

@@ -207,8 +207,16 @@
         <span id="frequency-penalty-value">0</span>
       </div>
 
+      <div>
+        <label for="max-tokens">最大回复限制token数:</label>
+        <input type="range" id="max-tokens" min="1" max="10000" step="1" value="2000">
+        <span id="max_tokens-vlaue">2000</span>
       </div>
-      <!-- 重复以上结构以添加其他参数控制 -->
+
+      <div>
+        <label for="memory-turns">记忆轮数:</label>
+        <input type="number" id="memory-turns"  min="1" max ='64' value="5">
+      </div>
 
     </div>
   </div>
@@ -243,6 +251,8 @@ document.getElementById('live2d-container').addEventListener('mouseout', functio
     }
   }
   window.addEventListener('load', loadLive2D);
+
+
 </script> 
 
 </body>

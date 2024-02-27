@@ -1,17 +1,5 @@
 {
-
-"redirects": [
-
-{
-
-"source": "/(.*)",
-
-"destination": "https://",
-
-"statusCode": 301
-
-}
-
-]
-
+    "github": {
+        "silent": true
+    }
 }

@@ -32,6 +32,7 @@ z-index: 1000 !important; /* 确保链接在其他内容之上 */
   width: 800px; /* Adjust as needed */
   height: 500px; /* Adjust as needed */
 }
+
 #chat-btn {
   position: fixed;
   bottom: 10px; /* 与关闭桌宠按钮相同，确保同高 */
@@ -56,28 +57,22 @@ flex-direction: column; /* 子元素垂直排列 */
 justify-content: center; /* 垂直居中 */
 align-items: flex-start; /* Align items to the start of the flex container */
 width: 100%; /* 容器宽度 */
-height: calc(100% - 60px); /* 容器高度，减去chat-header的高度 */
 position: absolute; /* 相对于父元素绝对定位 */
-top: 45px; /* chat-header的高度 */
+top: 44px; /* chat-header的高度 */
 left: 0;
 z-index: 2; /* 显示在其他内容之上 */
 display: none; /* 默认不显示 */
 border-radius: 0 0 10px 10px; /* Top-left, top-right, bottom-right, bottom-left */
-padding: 20px; /* 内边距 */
 background: white; /* Light grey background */
-border: 1px solid #e0e0e0; /* Light border for definition */
-max-height: 600px; /* Replace with the desired maximum height */
+max-height: 510px; /* Replace with the desired maximum height */
 overflow-y: auto; /* Adds a scrollbar if the content overflows */
-
-
-
+padding: 20px;
 }
 
 #settings-container > div {
 margin: 10px 0; /* 每个设置项之间的间距 */
 width: 80%; /* 设置项宽度 */
 background: #ffffff; /* White background for each setting */
-padding: 10px;
 margin-bottom: 15px; /* Space between settings */
 border-radius: 8px; /* Rounded corners for the setting blocks */
 }

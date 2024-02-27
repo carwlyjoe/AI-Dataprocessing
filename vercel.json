@@ -1,0 +1,17 @@
+{
+
+"redirects": [
+
+{
+
+"source": "/(.*)",
+
+"destination": "https://",
+
+"statusCode": 301
+
+}
+
+]
+
+}

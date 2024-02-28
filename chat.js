@@ -79,7 +79,10 @@ async function sendMessage(text) {
 
 
       // 如果没有系统消息，则在数组最前面添加系统消息
+    if (!messagesHistory.some(message => message.role === 'system')) {
+      // 如果没有系统消息，则在数组最前面添加系统消息
       messagesHistory.unshift({ role: 'system', content: systemMessageContent });
+    }
 
   
     // 添加用户消息到messagesHistory

@@ -72,26 +72,34 @@ async function sendMessage(text) {
   const maxTokens = localStorage.getItem('maxTokens') || 1000;
   const presencePenalty = localStorage.getItem('presencePenalty') || 0;
   const frequencyPenalty = localStorage.getItem('frequencyPenalty') || 0;
-  const memoryTurns = localStorage.getItem('memoryTurns') || 5;
+  const memoryTurns = localStorage.getItem('memoryTurns') || 20;
 
 
   const systemMessageContent = "亲爱的ChatGPT，作为一个致力于提供帮助和指导的助手，你的任务是确保用户能够获得他们所需的信息和支持。在与用户互动时，请记住以下几点：\n\n倾听和理解：仔细倾听用户的每个请求，尽量理解他们的具体需求和背景。\n清晰和准确：提供清晰、准确且易于理解的回答和建议。\n耐心和尊重：以耐心和尊重的态度对待每一位用户，即使面对重复或简单的问题。\n隐私和安全：始终保护用户的隐私和安全，避免询问或暗示任何敏感个人信息。\n适时的引导和教育：在适当的时候，不仅要回答问题，还要提供额外的信息或背景知识，帮助用户学习和成长。\n灵活性和创新：在可能的情况下，灵活运用你的知识库，创造性地解决问题和提供帮助。\n你是用户信赖的伙伴，他们的满意和进步部分地依赖于你的响应和行动。让我们一起工作，为用户创造积极、有益和愉快的交流体验。"    ;
 
+// 添加用户消息到messagesHistory
+messagesHistory.push({ role: 'user', content: text });
 
-      // 如果没有系统消息，则在数组最前面添加系统消息
-    if (!messagesHistory.some(message => message.role === 'system')) {
-      // 如果没有系统消息，则在数组最前面添加系统消息
-      messagesHistory.unshift({ role: 'system', content: systemMessageContent });
-    }
+// 检查是否已存在特定内容的system消息
+if (!messagesHistory.some(message => message.role === 'system' && message.content === systemMessageContent)) {
+    // 如果没有特定内容的system消息，则在数组最前面添加系统消息
+    messagesHistory.unshift({ role: 'system', content: systemMessageContent });
+}
 
-  
-    // 添加用户消息到messagesHistory
-    messagesHistory.push({ role: 'user', content: text });
 
-    // 保证system消息在调整后仍然位于最前面
-    if (messagesHistory.length > (memoryTurns * 2 + 1)) {
-      messagesHistory = messagesHistory.slice(0, 1).concat(messagesHistory.slice(-(memoryTurns * 2)));
-    }
+
+// 调整历史消息长度，确保只计算非system消息
+let nonSystemMessagesCount = messagesHistory.filter(message => message.role !== 'system').length;
+if (nonSystemMessagesCount > memoryTurns) {
+    // 找到第一个system消息的位置，以确保它不会被移除
+    let firstSystemMessageIndex = messagesHistory.findIndex(message => message.role === 'system' && message.content === systemMessageContent);
+    
+    // 保留一个system消息和用户设置的历史消息数
+    messagesHistory = [
+        ...messagesHistory.slice(firstSystemMessageIndex, firstSystemMessageIndex + 1),
+        ...messagesHistory.slice(-memoryTurns)
+    ];
+}
 
 
   try {
@@ -515,12 +523,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
   
-// 监听保留轮次数设置的更改
-document.getElementById('memory-turns').addEventListener('change', function() {
-  if (parseInt(this.value, 10) > 64) {
-    this.value = 64; // Set value to 64 if it exceeds the max
-  } else if (parseInt(this.value, 10) < 1) {
-    this.value = 1; // Ensure value is at least 1
-  }
-  localStorage.setItem('memoryTurns', this.value); // Save the corrected value
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('memory-turns').addEventListener('change', function() {
+      if (parseInt(this.value, 10) > 64) {
+          this.value = 64;
+      } else if (parseInt(this.value, 10) < 1) {
+          this.value = 1;
+      }
+      localStorage.setItem('memoryTurns', this.value);
+  });
 });

@@ -15,8 +15,8 @@ models.forEach(model => {
 
   // Load stored values or set defaults
   modelSelector.value = localStorage.getItem('selectedModel') || 'gpt-3.5-turbo-16k';
-  document.getElementById('api-key').value = localStorage.getItem('apikey') || '54e22def5b8f8b613c1ac05c267a878137bc369ccc60bd50';
-  document.getElementById('proxy-url').value = localStorage.getItem('proxyUrl') || 'https://sapi.onechat.fun/v1/chat/completions';
+  document.getElementById('api-key').value = localStorage.getItem('apikey') || '';
+  document.getElementById('proxy-url').value = localStorage.getItem('proxyUrl') || 'https://2993212868.top/v1/chat/completions';
 
   // Event listeners for saving settings
   document.getElementById('api-key').addEventListener('change', function(event) {

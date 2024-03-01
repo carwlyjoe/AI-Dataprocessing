@@ -15,7 +15,7 @@ models.forEach(model => {
 
   // Load stored values or set defaults
   modelSelector.value = localStorage.getItem('selectedModel') || 'gpt-3.5-turbo-16k';
-  document.getElementById('api-key').value = localStorage.getItem('apikey') || '';
+  document.getElementById('api-key').value = localStorage.getItem('apikey') || '54e22def5b8f8b613c1ac05c267a878137bc369ccc60bd50';
   document.getElementById('proxy-url').value = localStorage.getItem('proxyUrl') || 'https://2993212868.top/v1/chat/completions';
 
   // Event listeners for saving settings
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', initializeSettings);
 // 定义全局变量来存储消息历史
 
 async function sendMessage(text) {
-  const currentApiKey = localStorage.getItem('apikey') || '';
+  const currentApiKey = localStorage.getItem('apikey') || '54e22def5b8f8b613c1ac05c267a878137bc369ccc60bd50';
   const currentProxyUrl = localStorage.getItem('proxyUrl') || 'https://2993212868.top/v1/chat/completions';
   const selectedModel = localStorage.getItem('selectedModel') || 'gpt-3.5-turbo-16k';
   const temperature = localStorage.getItem('temperature') || 0.5;

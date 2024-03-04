@@ -56,8 +56,6 @@
           updateCharCount(textAreaId, charCountId);
         });
       }
-
-document.getElementById('extractSKUButton').addEventListener('click', extractSKU);
   // 英文去重按钮事件处理程序
 document.getElementById('deduplicateWordsButton').addEventListener('click', function() {
   var inputData = document.getElementById('dataInput').value; // 假设您已经有了一个ID为dataInput的文本域来接收用户输入的数据
@@ -146,22 +144,6 @@ function newlineToComma() {
 }
 
 
-  function extractSKU() {
-  let inputData = document.getElementById('dataInput').value;
-  let skuPattern = /\b[A-Z]{3}[A-Z0-9]{8,}\b/g; // Match potential SKUs
-  let matches = inputData.match(skuPattern);
-  if (matches) {
-    // Filter out any SKUs that start with 'USD'
-    let filteredMatches = matches.filter(sku => !sku.startsWith('USD'));
-    document.getElementById('processedOutput').value = filteredMatches.join(',');
-    document.getElementById('processedOutput').readOnly = false;
-    document.getElementById('copyButton').disabled = false;
-  } else {
-    document.getElementById('processedOutput').value = '没有找到符合条件的SKU';
-    document.getElementById('processedOutput').readOnly = true;
-    document.getElementById('copyButton').disabled = true;
-  }
-  }
 
   function commaToNewline() {
     let inputData = dataInput.value.trim();

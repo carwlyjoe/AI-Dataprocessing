@@ -2,6 +2,7 @@ body {
   background-color: #f8f9fa;
   padding: 20px;
   font-family: 'Arial', sans-serif;
+
 }
 
 #close-live2d {
@@ -19,19 +20,32 @@ right: 0 !important; /* 将按钮固定在页面的右侧 */
 z-index: 1000 !important; /* 确保链接在其他内容之上 */
 }
 
+a {
+  color: #a2c6ff; /* 蓝色 */
+  text-decoration: underline; /* 下划线 */
+}
+
+
+#live2d {
+  cursor: pointer !important;
+  height: 200px !important;
+  position: relative;
+  width: 200px !important;
+}
+
 
 
 .chat-container {
   display: none;
-  position: absolute; /* 支持拖动 */
-  top: 5%; /* Center vertically */
-  left: 50%; /* Center horizontally */
-  /* Add your width, height, or max-width/max-height as needed */
-  z-index: 1000; /* Make sure it's above other content */
-  /*改变对话框大小*/
-  width: 800px; /* Adjust as needed */
-  height: 500px; /* Adjust as needed */
+  position: absolute; /* or 'fixed' if you want it to stay in place on scroll */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100000; /* Ensure it's above other content */
+  width: 1000px; /* Adjust as needed */
+  height: 800px; /* Adjust as needed */
 }
+
 
 #chat-btn {
   position: fixed;
@@ -205,10 +219,12 @@ font-size: 1rem;
 
 .message.sent {
   align-items: flex-end;
+  overflow-x: auto; /* Adds a scrollbar if the content overflows */
 }
 
 .message.received {
   align-items: flex-start;
+  
 }
 
 .nickname {
@@ -217,14 +233,39 @@ font-size: 1rem;
   margin-bottom: 4px;
 }
 
+.chat-box img {
+  max-width: 100%; 
+  max-height: 100%; /* 设置图片最大宽度为对话框宽度 */
+  height: auto;     /* 高度自动调整以保持宽高比 */
+  display: block;   /* 防止图片下方出现额外空间 */
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #beb8b8;
+}
+
+
+
 .bubble {
   border-radius: 18px;
   padding: 10px 16px;
   background-clip: padding-box;
   margin: 5px 0;
   word-break: break-word;
-  max-width: fit-content;
-  max-width: -moz-fit-content; /* For Mozilla browsers */
+  max-width: 100%;
+  overflow-x: auto;
+
 }
 
 .message.received .bubble {
@@ -233,7 +274,7 @@ font-size: 1rem;
 }
 
 .message.sent .bubble {
-  background-color: #007bff;
+  background-color: #A7ADB3;
   color: #ffffff;
 }
 
@@ -264,26 +305,7 @@ font-size: 1rem;
 }
 
 
-/* Style for the code block container */
-pre.code-block {
-  background-color: #1e1e1e; /* Dark background for code block */
-  color: #dcdcdc; /* Light grey text color */
-  border-radius: 4px; /* Rounded corners */
-  padding: 10px; /* Padding inside the code block */
-  overflow-x: auto; /* Horizontal scroll if the content is too wide */
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace; /* Font style for code */
-  margin: 5px 0; /* Margin around the code block */
-  white-space: pre; /* Preserves whitespace and formatting */
-}
 
-
-/* Optional: Style for inline code snippets */
-code {
-  background-color: #f4f4f4;
-  padding: 2px 4px;
-  border-radius: 4px;
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-}
 
       /* 设置按钮样式 */
 .settings-btn {
@@ -331,4 +353,32 @@ padding: 5px 10px;
 border: 1px solid #ccc;
 border-radius: 4px;
 font-size: 1rem;
+}
+/* 更具体的选择器，增加了优先级 */
+div pre {
+  background-color: #1e1e1e !important; /* Dark background for code block */
+  color: #cbd2ea ;
+  border-radius: 4px; /* Rounded corners */
+  padding: 10px; /* Padding inside the code block */
+  overflow-x: auto; /* Horizontal scroll if the content is too wide */
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace; /* Font style for code */
+  margin: 5px 0; /* Margin around the code block */
+  white-space: pre; /* Preserves whitespace and formatting */
+  position: relative;
+}
+div pre code{
+  background-color: #1e1e1e !important; /* Dark background for code block */
+  color: #cbd2ea;
+  text-shadow: none ; /* White text color */
+
+}
+.copy-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px;
+  background-color: var(--black);
+  color: var(--white);
+  border: var(--border-in-light);
+  cursor: pointer;
 }

@@ -4,7 +4,7 @@ let messagesHistory = []
 function initializeSettings() {
 
 document.getElementById('api-key').value = localStorage.getItem('apikey');
-document.getElementById('proxy-url').value = localStorage.getItem('proxyUrl') || 'https://2993212868.top';
+document.getElementById('proxy-url').value = localStorage.getItem('proxyUrl');
 
 // Event listeners for saving settings
 document.getElementById('api-key').addEventListener('change', function(event) {
@@ -776,11 +776,12 @@ const converter = new showdown.Converter({
   simpleLineBreaks: true,
   simplifiedAutoLink: true,
   excludeTrailingPunctuationFromURLs: true,
+  parseImgDimensions: true, // 允许解析图片尺寸
 });
 finalmessage = createHighlightedCodeBlocks(userInput);
 
 const htmlUsertext = converter.makeHtml(finalmessage);
-const strippedHtmlUsertext = htmlUsertext.replace(/<p>|<\/p>|<br>$/g, '');
+const strippedHtmlUsertext = htmlUsertext.replace(/^<p>|<\/p>$/g, '');
 
 
 

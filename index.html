@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/rainbow.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="shortcut icon" href="https://i2.100024.xyz/2023/12/31/lzcxtj.webp" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="data.css">
+    
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AI&数据处理</title>
 </head>
 
@@ -86,7 +91,7 @@
           <!-- 添加序号功能 -->
           <div class="input-group mb-3">
             <span class="input-group-text">序号格式</span>
-            <select class="form-select" id="serialFormatSelect">
+            <select class="form-select" id="serialFormatSelect" aria-label="序号格式">
               <option value="n">n</option>
               <option value="n.">n.</option>
               <option value="n、">n、</option>
@@ -129,15 +134,15 @@
     </div>
   </body>
 
-  <button id="chat-btn">聊天</button>
+  <button type="button" id="chat-btn">聊天</button>
 
 
 
   <div class="chat-container">
     <div class="chat-header">
       ChatGPT
-      <button id="clear-chat" class="clear-chat-btn"><i class="fas fa-broom"></i></button>
-      <button id="settings-button" class="settings-btn"><i class="fas fa-cog"></i></button>
+      <button id="clear-chat" class="clear-chat-btn" aria-label="清空聊天"><i class="fas fa-broom"></i></button>
+      <button id="settings-button" class="settings-btn" aria-label="设置"><i class="fas fa-cog"></i></button>
     </div>
 
       <div class="chat-box">
@@ -212,7 +217,7 @@
   </div>
 
 
-  <div id="live2d-container" style="position: fixed; right: 0; bottom: 0; z-index: 99999;">
+  <div id="live2d-container" style="position: fixed; right: 0; bottom: 40px; z-index: 99999;">
     <canvas id="live2d" width="150" height="200"></canvas>
     <button id="close-live2d">关闭桌宠</button>
   </div>
@@ -222,6 +227,6 @@
 </body>
 <script src="dateprocessing.js"></script>
 <script src="chat.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/live2d.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/prism.js"></script>
+<script src="https://fastly.jsdelivr.net/gh/1741053806/live2d-widget@latest/autoload.js"></script>
 
